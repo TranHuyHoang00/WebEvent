@@ -10,10 +10,18 @@ class header extends Component {
     }
     async componentDidMount() {
     }
+    onClickPage = () => {
+        this.props.history.push(`/home`);
+    }
     render() {
         return (
-            <>
-            </>
+            <div className='h-1/6'>
+                <div className='flex items-center justify-center p-[10px]'>
+                    <img onClick={() => this.onClickPage()}
+                        className='h-[130px] w-auto cursor-pointer hover:scale-105 duration-500 ease-in-out'
+                        src='https://rebelsaintrecords.com/wp-content/themes/yootheme/cache/c3/1_5-removebg-preview-c32c9ec9.webp' />
+                </div>
+            </div>
         );
     }
 

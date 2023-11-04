@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route, Redirect } from "react-router-dom";
 import { withRouter } from 'react-router-dom';
 import Users from './users/index';
+import Test from './users/pages/test';
 class index extends Component {
     constructor(props) {
         super(props);
@@ -16,6 +17,8 @@ class index extends Component {
                 <Switch>
                     <Route path="/home"><Users /></Route>
                     <Redirect from="/" exact to="/home" />
+
+                    <Route path="/test"><Test /></Route>
                 </Switch>
             </div>
         );
