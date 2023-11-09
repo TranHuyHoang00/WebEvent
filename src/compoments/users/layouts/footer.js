@@ -16,8 +16,8 @@ class footer extends Component {
     }
     render() {
         return (
-            <div className='h-1/6 flex items-center justify-center'>
-                <div className='p-[10px] text-[18px] font-thin'>
+            <div className='flex items-center justify-center'>
+                <div className='p-[10px] text-[16px] font-thin'>
                     <h2 onClick={() => this.onClickPage()}
                         className="cursor-pointer text-white hover:text-[#4acec7fa] hover:scale-105 duration-300 ease-in-out">
                         www.rebelsaintrecords.com

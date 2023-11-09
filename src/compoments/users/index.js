@@ -3,8 +3,10 @@ import { Switch, Route } from "react-router-dom";
 import { withRouter } from 'react-router-dom';
 import Header from './layouts/header';
 import Footer from './layouts/footer';
-import Home from './pages/home';
-import Login from './pages/login';
+// import Home from './pages/home';
+import Calendar from './pages/calendar/calendar';
+import Schedule from './pages/schedule/schedule';
+import Schedule_detail from './pages/schedule/schedule_detail';
 class index extends Component {
     constructor(props) {
         super(props);
@@ -16,15 +18,15 @@ class index extends Component {
     }
     render() {
         return (
-            <div className='h-screen w-screen flex items-center justify-center bg-black'>
-                <div className='h-full w-full'>
-                    <Header />
-                    <Switch>
-                        <Route exact path="/home"><Home /></Route>
-                        <Route path="/home/login"><Login /></Route>
-                    </Switch>
-                    <Footer />
-                </div>
+            <div className='h-screen w-screen flex flex-col bg-black '>
+                <Header />
+                <Switch>
+                    {/* <Route exact path="/home"><Home /></Route> */}
+                    <Route exact path="/home/calendar"><Calendar /></Route>
+                    <Route exact path="/home/schedule"><Schedule /></Route>
+                    <Route exact path="/home/schedule/:id"><Schedule_detail /></Route>
+                </Switch>
+                <Footer />
             </div>
         );
     }

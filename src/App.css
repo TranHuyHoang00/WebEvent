@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+/* Primereact */
+body {
+  font-family: var(--font-family);
+}
+ 
