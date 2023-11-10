@@ -7,6 +7,7 @@ import Footer from './layouts/footer';
 import Calendar from './pages/calendar/calendar';
 import Schedule from './pages/schedule/schedule';
 import Schedule_detail from './pages/schedule/schedule_detail';
+import Profile from './pages/profile/profile';
 class index extends Component {
     constructor(props) {
         super(props);
@@ -16,15 +17,18 @@ class index extends Component {
     }
     async componentDidMount() {
     }
+    handleLogout_Index_C = () => {
+        this.props.handleLogout_Index();
+    }
     render() {
         return (
             <div className='h-screen w-screen flex flex-col bg-black '>
-                <Header />
+                <Header handleLogout_Index_C={this.handleLogout_Index_C} />
                 <Switch>
-                    {/* <Route exact path="/home"><Home /></Route> */}
-                    <Route exact path="/home/calendar"><Calendar /></Route>
-                    <Route exact path="/home/schedule"><Schedule /></Route>
-                    <Route exact path="/home/schedule/:id"><Schedule_detail /></Route>
+                    <Route exact path="/home"><Calendar /></Route>
+                    <Route exact path="/home/schedule/:date"><Schedule /></Route>
+                    <Route exact path="/home/schedule/detail/:id"><Schedule_detail /></Route>
+                    <Route exact path="/home/profile"><Profile /></Route>
                 </Switch>
                 <Footer />
             </div>

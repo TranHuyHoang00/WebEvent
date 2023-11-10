@@ -9,15 +9,14 @@ import { Button } from 'primereact/button';
 import './style/style.css';
 import { AnimatePresence, motion } from "framer-motion/dist/framer-motion";
 import { FiAlertCircle } from "react-icons/fi";
-import { Image, Carousel } from 'antd';
+import { Image, Carousel, Avatar } from 'antd';
 
 class schedule_detail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             isOpen: false,
-            dataSchedule: {
-            },
+            dataSchedule: {},
             time_locaiton: {
                 id: '1', make_up_time: '12:20', leave_time: '15:30', show_time: '13:00', show_date: '23/12/2023',
                 show_location: '112 Nam Cao, Tp. Thu Duc, HCM', agency_name: 'Tran Huy Hoang', contact: '0886849390'
@@ -25,19 +24,22 @@ class schedule_detail extends React.Component {
             makeup_hair: {
                 id: '1', make_up: 'Vu Trung An', make_hair: 'Vu Duc Hai',
                 img: [
-                    { id: '1', value: '1.png' },
-                    { id: '2', value: '2.png' }
+                    { id: '1', value: '1.jpg' },
+                    { id: '2', value: '2.jpg' }
                 ]
             },
             stylist: {
                 id: '1', name: 'local',
                 img: [
-                    { id: '1', value: '1.png' },
-                    { id: '2', value: '2.png' }
+                    { id: '1', value: '3.jpg' },
+                    { id: '2', value: '4.jpg' }
                 ]
             },
             charge_of: {
                 id: '1', name: 'Do Thanh Lap',
+            },
+            user: {
+                id: 1, fullname: 'Star Gazer', username: 'StarGazer', avatar: '1.jpg', role: { id: '3', name: 'artist' }
             },
             modal_time_locaiton: false,
             modal_makeup_hair: false,
@@ -49,7 +51,7 @@ class schedule_detail extends React.Component {
     async componentDidMount() {
     }
     onCLickBack = () => {
-        this.props.history.push('/home/schedule')
+        window.history.back();
     }
     onClickModal = (name, value) => {
         if (name == 'time_locaiton') { this.setState({ modal_time_locaiton: value }) }
@@ -62,23 +64,39 @@ class schedule_detail extends React.Component {
         let makeup_hair = this.state.makeup_hair;
         let stylist = this.state.stylist;
         let charge_of = this.state.charge_of;
+        let user = this.state.user;
         return (
             <>
                 <div className='bg-black flex-grow flex items-center justify-center font-serif'>
                     <div className='flex flex-col h-full space-y-[10px] px-[10px]'>
-                        <div className=" py-[10px]">
-                            <Button onClick={() => this.onCLickBack()}
-                                className=" p-[5px] space-x-[10px]">
-                                <span>Back</span>
-                                <AiOutlineDoubleLeft />
-                            </Button>
+                        <div className='pt-[10px]'>
+                            <div onClick={() => this.onCLickBack()}
+                                className="w-[100px] px-[10px] py-[5px] relative rounded-[10px] group overflow-hidden bg-gray-900 text-white 
+                            hover:scale-105 transition-all duration-500 ease-out cursor-pointer border-white border-[1px]">
+                                <span className="absolute inset-0 flex items-center justify-center text-white duration-500 -translate-x-full
+                                bg-gradient-to-br from-[#ff8a05] via-[#ff5478] to-[#ff00c6] group-hover:translate-x-0 ease"></span>
+                                <div className="relative group-hover:text-white">
+                                    <div className='flex items-center justify-center space-x-[10px]'>
+                                        <AiOutlineDoubleLeft />
+                                        <div >BACK</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div className=" flex-grow text-white ">
                             <div className='border p-[10px] rounded-[10px] shadow-md'>
-                                <div className='flex items-center justify-center rounded-[10px] bg-transparent text-white px-[10px] py-[5px] border'>
-                                    <div className='text-center'>
+                                <div className='flex items-center justify-center rounded-[10px] bg-transparent text-white 
+                                px-[10px] py-[5px] border space-x-[10px]'>
+                                    <div className='text-center hover:scale-105 duration-500 ease-in-out'>
                                         <label className='text-[18px]'>SCHEDULE INFO</label><br />
                                         <label className='text-[16px] text-gray-400'>HENIKEN</label>
+                                    </div>
+                                    <div className=" p-[10px] text-yellow-400 text-[18px] italic text-center space-y-[5px] hover:scale-105 duration-500 ease-in-out">
+                                        {user && user.avatar &&
+                                            <Avatar src={require(`../../../../assets/images/${user.avatar}`).default} size={100}
+                                                className='border-[2px] border-white ' />
+                                        }
+                                        <div><span className=''>{user && user.fullname}</span></div>
                                     </div>
                                 </div>
                                 <div className='p-[10px] space-y-[10px]'>
@@ -272,7 +290,7 @@ class schedule_detail extends React.Component {
                                                                 return (
                                                                     <>
                                                                         <div key={item.id} className='flex items-center justify-center'>
-                                                                            <Image className='h-full w-full rounded-[5px]' src={require(`../../../../assets/images/${item.value}`).default} />
+                                                                            <Image className='object-cover' width={200} height={200} src={require(`../../../../assets/images/${item.value}`).default} />
                                                                         </div>
                                                                     </>
                                                                 )
@@ -311,7 +329,7 @@ class schedule_detail extends React.Component {
                                             <AiTwotoneSkin />
                                             <div>STYLIST</div>
                                         </div>
-                                        <div className='text-[18px] space-y-[10px]'>
+                                        <div className='text-[18px] space-y-[20px]'>
                                             <div className=''>
                                                 <div className='flex items-center space-x-[5px]'>
                                                     <AiOutlineCaretRight />
@@ -321,7 +339,7 @@ class schedule_detail extends React.Component {
                                                     <label>{stylist && stylist.name}</label>
                                                 </div>
                                             </div>
-                                            <div className=''>
+                                            <div className='space-y-[5px]'>
                                                 <div className='flex items-center space-x-[5px]'>
                                                     <AiOutlineCaretRight />
                                                     <label>Outfit :</label>
@@ -333,8 +351,8 @@ class schedule_detail extends React.Component {
                                                             {stylist && stylist.img && stylist.img.map((item, index) => {
                                                                 return (
                                                                     <>
-                                                                        <div key={item.id} className='flex items-center justify-center'>
-                                                                            <Image className='h-full w-full rounded-[5px]' src={require(`../../../../assets/images/${item.value}`).default} />
+                                                                        <div key={item.id} className='flex items-center justify-center '>
+                                                                            <Image className='object-cover' width={200} height={200} src={require(`../../../../assets/images/${item.value}`).default} />
                                                                         </div>
                                                                     </>
                                                                 )
