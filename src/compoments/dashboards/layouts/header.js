@@ -2,29 +2,65 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../../../store/actions';
-import { Chip } from 'primereact/chip';
-import x from '../../../assets/images/1.png'
+import { AiOutlineContainer } from "react-icons/ai";
+import { get_local_account, remove_local_account } from '../../../auths/local_storage';
+import { Avatar, Dropdown } from 'antd';
+import { BiExit } from "react-icons/bi";
 class header extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            data_user: {},
         }
     }
     async componentDidMount() {
+        let data_user = get_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_DB);
+        if (data_user) {
+            this.setState({ data_user: data_user.data.user })
+        }
     }
-    onClickPage = () => {
+    onClickPage = (name) => {
+        if (name == 'home') { this.props.history.push(`/home`) };
+        if (name == 'profile') { this.props.history.push(`/home/profile`) };
+    }
+    onClickLogout = () => {
+        this.props.handleLogout_Index();
+        remove_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_DB);
+        this.props.history.push(`/dashboard/login`);
     }
     render() {
+        let data_user = this.state.data_user;
+        const items = [
+            {
+                label: <a onClick={() => this.onClickPage('profile')}
+                    className='text-[16px] font-serif '>Profile</a>,
+                key: '0',
+                icon: <AiOutlineContainer />,
+            },
+            {
+                label: <a onClick={() => this.onClickLogout()}
+                    className='text-[16px] font-serif'>Logout</a>,
+                key: '1',
+                icon: <BiExit />,
+            },
+        ];
         return (
-            <div className=' bg-slate-800 p-[10px]'>
-                <div className='flex items-center justify-center '>
-                    <div>
-                        {/* <Chip label="JACKIE NJINE" image={require(`../../../assets/images/1.png`).default} className="" /> */}
-                    </div>
-                    <div>
-
-                    </div>
+            <div className='flex items-center justify-between'>
+                <div className='hover:text-yellow-400  duration-500 ease-in-out'>
+                    <Dropdown
+                        menu={{ items }}
+                        trigger={['click', 'hover']}>
+                        <div className='space-x-[5px] cursor-pointer flex items-center justify-center'>
+                            < Avatar size={40}
+                                src={(data_user.avatar == "" || !data_user.avatar || data_user.avatar == null) ? require(`../../../assets/images/None.jpg`).default
+                                    : data_user.avatar} />
+                            <div className='truncate'>
+                                {data_user && data_user.fullname}
+                            </div>
+                        </div>
+                    </Dropdown>
                 </div>
+
             </div>
         );
     }

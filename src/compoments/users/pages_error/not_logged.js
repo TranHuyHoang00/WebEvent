@@ -9,7 +9,7 @@ class not_logged extends Component {
     async componentDidMount() {
     }
     onClickPage = () => {
-        this.props.history.push('/login_user')
+        this.props.history.push('/home/login')
     }
     render() {
         return (

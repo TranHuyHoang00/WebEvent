@@ -3,9 +3,7 @@ import { withRouter } from 'react-router-dom';
 import {
     AiOutlineDoubleLeft, AiOutlineFieldTime, AiOutlineEnvironment, AiTwotoneEdit, AiOutlineGithub,
     AiTwotoneSkin, AiFillContacts, AiOutlineCaretRight, AiOutlineDoubleRight,
-
 } from "react-icons/ai";
-import { Button } from 'primereact/button';
 import './style/style.css';
 import { AnimatePresence, motion } from "framer-motion/dist/framer-motion";
 import { FiAlertCircle } from "react-icons/fi";
@@ -164,7 +162,7 @@ class schedule_detail extends React.Component {
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             className="bg-slate-900/20 p-[20px] fixed inset-0 z-50 grid place-items-center overflow-y-scroll cursor-pointer font-serif">
                             <motion.div initial={{ scale: 0, rotate: "12.5deg" }} animate={{ scale: 1, rotate: "0deg" }} exit={{ scale: 0, rotate: "0deg" }}
-                                className=" bg-gradient-to-r from-cyan-600 to-blue-600 text-white p-6 rounded-lg w-full max-w-md shadow-xl cursor-default relative overflow-hidden">
+                                className=" bg-gradient-to-r from-slate-900 to-slate-950 text-white p-6 rounded-lg w-full max-w-md shadow-xl cursor-default relative overflow-hidden">
                                 <FiAlertCircle className="text-white/10 rotate-12  absolute z-0 -top-24 -left-24" />
                                 <div className="relative z-10">
                                     <div className='space-y-[20px]'>
@@ -249,7 +247,7 @@ class schedule_detail extends React.Component {
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             className="bg-slate-900/20 p-[20px] fixed inset-0 z-50 grid place-items-center overflow-y-scroll cursor-pointer font-serif">
                             <motion.div initial={{ scale: 0, rotate: "12.5deg" }} animate={{ scale: 1, rotate: "0deg" }} exit={{ scale: 0, rotate: "0deg" }}
-                                className=" bg-gradient-to-r from-cyan-600 to-blue-600 text-white p-6 rounded-lg w-full max-w-md shadow-xl cursor-default relative overflow-hidden">
+                                className=" bg-gradient-to-r from-slate-900 to-slate-950 text-white p-6 rounded-lg w-full max-w-md shadow-xl cursor-default relative overflow-hidden">
                                 <FiAlertCircle className="text-white/10 rotate-12  absolute z-0 -top-24 -left-24" />
                                 <div className="relative z-10">
                                     <div className='space-y-[20px]'>
@@ -321,7 +319,7 @@ class schedule_detail extends React.Component {
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             className="bg-slate-900/20 p-[20px] fixed inset-0 z-50 grid place-items-center overflow-y-scroll cursor-pointer font-serif">
                             <motion.div initial={{ scale: 0, rotate: "12.5deg" }} animate={{ scale: 1, rotate: "0deg" }} exit={{ scale: 0, rotate: "0deg" }}
-                                className=" bg-gradient-to-r from-cyan-600 to-blue-600 text-white p-6 rounded-lg w-full max-w-md shadow-xl cursor-default relative overflow-hidden">
+                                className=" bg-gradient-to-r from-slate-900 to-slate-950 text-white p-6 rounded-lg w-full max-w-md shadow-xl cursor-default relative overflow-hidden">
                                 <FiAlertCircle className="text-white/10 rotate-12  absolute z-0 -top-24 -left-24" />
                                 <div className="relative z-10">
                                     <div className='space-y-[20px]'>
@@ -383,7 +381,7 @@ class schedule_detail extends React.Component {
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             className="bg-slate-900/20 p-[20px] fixed inset-0 z-50 grid place-items-center overflow-y-scroll cursor-pointer font-serif">
                             <motion.div initial={{ scale: 0, rotate: "12.5deg" }} animate={{ scale: 1, rotate: "0deg" }} exit={{ scale: 0, rotate: "0deg" }}
-                                className=" bg-gradient-to-r from-cyan-600 to-blue-600 text-white p-6 rounded-lg w-full max-w-md shadow-xl cursor-default relative overflow-hidden">
+                                className=" bg-gradient-to-r from-slate-900 to-slate-950 text-white p-6 rounded-lg w-full max-w-md shadow-xl cursor-default relative overflow-hidden">
                                 <FiAlertCircle className="text-white/10 rotate-12  absolute z-0 -top-24 -left-24" />
                                 <div className="relative z-10">
                                     <div className='space-y-[20px]'>

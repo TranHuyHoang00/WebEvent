@@ -63,7 +63,8 @@ class calendar extends React.Component {
                     value: 2,
                     label: 'PinkBunny',
                 },
-            ]
+            ],
+            type_param: 'day',
         }
 
     }
@@ -166,7 +167,12 @@ class calendar extends React.Component {
     };
     onSelectSchedule = (date) => {
         let date_format = date?.format('YYYY-MM-DD');
-        this.props.history.push(`/home/schedule/${date_format}`);
+        this.props.history.push(`/home/schedule/${this.state.type_param}/${date_format}`);
+    }
+    onPanelChange = () => {
+        let type_param = this.state.type_param;
+        if (type_param == 'day') { this.setState({ type_param: 'month' }) }
+        else { this.setState({ type_param: 'day' }) }
     }
     render() {
         let max_hight_schedule = this.state.max_hight_schedule;
@@ -174,7 +180,7 @@ class calendar extends React.Component {
         return (
             <div className='bg-black flex-grow flex items-center justify-center font-serif'>
                 <div ref={this.heightMain} className='flex flex-col h-full'>
-                    <div ref={this.heightMenu} className="px-[15px] py-[10px] ">
+                    <div ref={this.heightMenu} className="px-[15px] py-[10px] h-[50px]">
                         {user_role == 2 &&
                             <ConfigProvider
                                 theme={{
@@ -187,8 +193,7 @@ class calendar extends React.Component {
                                     style={{ width: 120 }} placement='bottomRight'
                                     options={this.state.data_user}
                                 />
-                            </ConfigProvider>
-                        }
+                            </ConfigProvider>}
                     </div>
                     <div className="flex-grow text-white ">
                         <ScrollPanel style={{ width: '100%', height: `${max_hight_schedule}px` }} className="p-[5px]">
@@ -203,7 +208,9 @@ class calendar extends React.Component {
                                             // colorText: 'rgb(255, 0, 0)'
                                         },
                                     }}>
-                                    <Calendar onSelect={(date, info) => this.onSelectSchedule(date)}
+                                    <Calendar
+                                        onPanelChange={(x) => this.onPanelChange(x)}
+                                        onSelect={(date, info) => this.onSelectSchedule(date)}
                                         cellRender={(current, info) => this.calender_render(current, info)}
                                         className='p-[10px] md:w-[700px]' />
                                 </ConfigProvider>

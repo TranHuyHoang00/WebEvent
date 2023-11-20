@@ -7,9 +7,9 @@ class time_location extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isOpenFormCreate: false,
-            isOpenFormDetail: false,
-            isOpenFormEdit: false,
+            open_create: false,
+            open_detail: false,
+            open_edit: false,
             dataTime_location: {},
             dataTime_locations: [
                 { id: '1', make_up_time: 'HENIKEN' },
@@ -38,20 +38,20 @@ class time_location extends Component {
         });
     }
     openForm = async (name, value, id) => {
-        if (name == 'create') { this.setState({ isOpenFormCreate: value }) }
+        if (name == 'create') { this.setState({ open_create: value }) }
         if (name == 'detail') {
             if (id == null) {
-                this.setState({ isOpenFormDetail: value });
+                this.setState({ open_detail: value });
             } else {
-                this.setState({ isOpenFormDetail: value });
+                this.setState({ open_detail: value });
                 await this.getTime_location(id);
             }
         }
         if (name == 'edit') {
             if (id == null) {
-                this.setState({ isOpenFormEdit: value });
+                this.setState({ open_edit: value });
             } else {
-                this.setState({ isOpenFormEdit: value, idTime_location: id });
+                this.setState({ open_edit: value, idTime_location: id });
                 await this.getTime_location(id);
             }
         }
@@ -110,7 +110,7 @@ class time_location extends Component {
                         pagination={{ pageSize: 6, }}
                         scroll={{ y: 300, x: 300, }} />
                 </div>
-                <Modal title="ADD NEW" open={this.state.isOpenFormCreate}
+                <Modal title="ADD NEW" open={this.state.open_create}
                     okText={'CONFIRM'} okType={'default'} cancelText={'CANCEL'}
                     onOk={() => this.handleCreate()}
                     onCancel={() => this.openForm('create', false)}
@@ -123,7 +123,7 @@ class time_location extends Component {
                         </div>
                     </div>
                 </Modal>
-                <Modal title="DETAIL" open={this.state.isOpenFormDetail}
+                <Modal title="DETAIL" open={this.state.open_detail}
                     okText={'EXIT'} okType={'default'} cancelText={'CANCEL'}
                     onOk={() => this.openForm('detail', false, null)}
                     onCancel={() => this.openForm('detail', false, null)}
@@ -144,7 +144,7 @@ class time_location extends Component {
                         </div>
                     </div>
                 </Modal>
-                <Modal title="EDIT" open={this.state.isOpenFormEdit}
+                <Modal title="EDIT" open={this.state.open_edit}
                     okText={'CONFIRM'} okType={'default'} cancelText={'CANCEL'}
                     onOk={() => this.handleEdit(this.state.idUser)}
                     onCancel={() => this.openForm('edit', false, null)}

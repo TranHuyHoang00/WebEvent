@@ -14,6 +14,7 @@ class schedule extends React.Component {
         this.state = {
             max_hight_schedule: 0,
             date_param: '',
+            type_param: '',
             dataSchedules: [
                 {
                     id: 1,
@@ -52,14 +53,17 @@ class schedule extends React.Component {
     async componentDidMount() {
         if (this.props.match && this.props.match.params) {
             let date_param = this.props.match.params.date;
-            this.setState({ date_param: date_param })
+            let type_param = this.props.match.params.type;
+            this.setState({ date_param: date_param, type_param: type_param })
         }
         const heightMenu = this.heightMenu.current.getBoundingClientRect().height;
         const heightMain = this.heightMain.current.getBoundingClientRect().height;
         this.setState({ max_hight_schedule: heightMain - heightMenu })
     }
     onClickDetail = (id) => {
-        this.props.history.push(`/home/schedule/detail/${id}`)
+        let type_param = this.state.type_param;
+        let date_param = this.state.date_param;
+        this.props.history.push(`/home/schedule/${type_param}/${date_param}/${id}`)
     }
     onCLickBack = () => {
         window.history.back();

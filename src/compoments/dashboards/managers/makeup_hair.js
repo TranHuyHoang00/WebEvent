@@ -7,9 +7,9 @@ class makeup_hair extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isOpenFormCreate: false,
-            isOpenFormDetail: false,
-            isOpenFormEdit: false,
+            open_create: false,
+            open_detail: false,
+            open_edit: false,
             dataMakeup_hair: {},
             dataMakeup_hairs: [
                 { id: '1', makeup_name: 'HENIKEN', hair_name: 'OLO', img: [{ id: '1', value: '1.png' }, { id: '2', value: '2.png' }] },
@@ -37,20 +37,20 @@ class makeup_hair extends Component {
         });
     }
     openForm = async (name, value, id) => {
-        if (name == 'create') { this.setState({ isOpenFormCreate: value }) }
+        if (name == 'create') { this.setState({ open_create: value }) }
         if (name == 'detail') {
             if (id == null) {
-                this.setState({ isOpenFormDetail: value });
+                this.setState({ open_detail: value });
             } else {
-                this.setState({ isOpenFormDetail: value });
+                this.setState({ open_detail: value });
                 await this.getMakeup_hair(id);
             }
         }
         if (name == 'edit') {
             if (id == null) {
-                this.setState({ isOpenFormEdit: value });
+                this.setState({ open_edit: value });
             } else {
-                this.setState({ isOpenFormEdit: value, idMakeup_hair: id });
+                this.setState({ open_edit: value, idMakeup_hair: id });
                 await this.getMakeup_hair(id);
             }
         }
@@ -139,7 +139,7 @@ class makeup_hair extends Component {
                         pagination={{ pageSize: 7, }}
                         scroll={{ y: 300, x: 300, }} />
                 </div>
-                <Modal title="ADD NEW" open={this.state.isOpenFormCreate}
+                <Modal title="ADD NEW" open={this.state.open_create}
                     okText={'CONFIRM'} okType={'default'} cancelText={'CANCEL'}
                     onOk={() => this.handleCreate()}
                     onCancel={() => this.openForm('create', false)}
@@ -157,7 +157,7 @@ class makeup_hair extends Component {
                         </div>
                     </div>
                 </Modal>
-                <Modal title="DETAIL" open={this.state.isOpenFormDetail}
+                <Modal title="DETAIL" open={this.state.open_detail}
                     okText={'EXIT'} okType={'default'} cancelText={'CANCEL'}
                     onOk={() => this.openForm('detail', false, null)}
                     onCancel={() => this.openForm('detail', false, null)}
@@ -186,7 +186,7 @@ class makeup_hair extends Component {
                         </div>
                     </div>
                 </Modal>
-                <Modal title="EDIT" open={this.state.isOpenFormEdit}
+                <Modal title="EDIT" open={this.state.open_edit}
                     okText={'CONFIRM'} okType={'default'} cancelText={'CANCEL'}
                     onOk={() => this.handleEdit(this.state.idUser)}
                     onCancel={() => this.openForm('edit', false, null)}

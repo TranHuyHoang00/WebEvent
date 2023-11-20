@@ -24,13 +24,12 @@ class header extends Component {
         if (name == 'profile') { this.props.history.push(`/home/profile`) };
     }
     onClickLogout = () => {
-        this.props.handleLogout_Index_C();
+        this.props.handleLogout_Index();
         remove_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_USER);
-        this.props.history.push(`/login_user`);
+        this.props.history.push(`/home/login`);
     }
     render() {
         let data_user = this.state.data_user;
-        console.log(data_user);
         const items = [
             {
                 label: <a onClick={() => this.onClickPage('profile')}
@@ -60,7 +59,8 @@ class header extends Component {
 
                         <div className='space-x-[5px] cursor-pointer flex items-center justify-center'>
                             {data_user && data_user.avatar &&
-                                < Avatar size={40} src={require(`../../../assets/images/${data_user.avatar}`).default} />
+                                < Avatar size={40} src={(data_user.avatar == "" || !data_user.avatar) ? require(`../../../assets/images/None.jpg`).default
+                                    : require(`../../../assets/images/${data_user && data_user.avatar}`).default} />
                             }
                             <div className='truncate'>
                                 {data_user && data_user.fullname}

@@ -7,7 +7,6 @@ import {
     AiFillGold
 } from "react-icons/ai";
 import { withRouter } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { get_local_account } from '../../auths/local_storage';
 import HeaderDB from './layouts/header';
 import ManagerUser from './managers/user';
@@ -16,20 +15,27 @@ import ManagerStylist from './managers/stylist';
 import ManagerChargeOf from './managers/charge_of';
 import ManagerMakeup_hair from './managers/makeup_hair';
 import ManagerRole from './managers/role';
+
+import Login_DB from './pages/login';
+import Not_logged from './pages_error/not_logged';
+import Not_found from './pages_error/not_found';
+
+import Empty from './pages/empty';
 class index extends Component {
     constructor(props) {
         super(props);
         this.state = {
             collapsed: false,
             url: '/dashboard/',
-            isLogin: false,
-            isFirewall: false,
-            isCheckPassFireWall: false,
-            passFireWall: '',
             value: {},
+            logged_in_db: false,
         }
     }
     async componentDidMount() {
+        let data_db = get_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_DB);
+        if (data_db) {
+            this.setState({ logged_in_db: true })
+        }
     }
     getItem = (label, key, icon, children, type) => {
         return { key, icon, children, label, type };
@@ -39,6 +45,12 @@ class index extends Component {
     }
     onClickPage = (value) => {
         this.props.history.push(`/dashboard/${value.key}`)
+    }
+    handleLogin_Index = () => {
+        this.setState({ logged_in_db: true });
+    }
+    handleLogout_Index = () => {
+        this.setState({ logged_in_db: false });
     }
     render() {
         const items = [
@@ -70,37 +82,59 @@ class index extends Component {
         ];
         const { Header, Content, Footer, Sider } = Layout;
         let url = this.state.url;
+        let logged_in_db = this.state.logged_in_db;
         return (
-            <div>
-
-                <Layout style={{ minHeight: '100vh', }} >
-                    <Sider className='sm:block hidden'
-                        collapsible collapsed={this.state.collapsed} onCollapse={(value) => this.setCollapsed(value)}>
-                        <Menu theme="dark" mode="inline" items={items} defaultSelectedKeys={['table']}
-                            onClick={(value) => this.onClickPage(value)} />
-                    </Sider>
-                    <Layout>
-                        <Header className='bg-white shadow-md flex items-center justify-between'>
-                            <div >
-                                <Menu className='sm:hidden block'
-                                    mode="horizontal" items={items1} defaultSelectedKeys={['menu']}
-                                    onClick={(value) => this.onClickPage(value)} />
-                            </div>
-                            <HeaderDB />
-                        </Header>
-                        <Content className='py-[10px]'>
-                            <Switch>
-                                <Route exact path={`${url}user`}><ManagerUser /></Route>
-                                <Route exact path={`${url}brand`}><ManagerBrand /></Route>
-                                <Route exact path={`${url}stylist`}><ManagerStylist /></Route>
-                                <Route exact path={`${url}charge_of`}><ManagerChargeOf /></Route>
-                                <Route exact path={`${url}makeup_hair`}><ManagerMakeup_hair /></Route>
-                                <Route exact path={`${url}role`}><ManagerRole /></Route>
-                            </Switch>
-                        </Content>
+            <>
+                {logged_in_db == true ?
+                    <Layout style={{ minHeight: '100vh', }} >
+                        <Sider className='sm:block hidden'
+                            collapsible collapsed={this.state.collapsed} onCollapse={(value) => this.setCollapsed(value)}>
+                            <Menu theme="dark" mode="inline" items={items} defaultSelectedKeys={['table']}
+                                onClick={(value) => this.onClickPage(value)} />
+                        </Sider>
+                        <Layout>
+                            <Header className='bg-white shadow-md flex items-center justify-between'>
+                                <div >
+                                    <Menu className='sm:hidden block'
+                                        mode="horizontal" items={items1} defaultSelectedKeys={['menu']}
+                                        onClick={(value) => this.onClickPage(value)} />
+                                </div>
+                                <HeaderDB handleLogout_Index={this.handleLogout_Index} />
+                            </Header>
+                            <Content className='py-[10px]'>
+                                <Switch>
+                                    <Route exact path={`${url}`}><Empty /></Route>
+                                    <Route exact path={`${url}login`}><Not_found /></Route>
+                                    <Route exact path={`${url}user`}><ManagerUser /></Route>
+                                    <Route exact path={`${url}brand`}><ManagerBrand /></Route>
+                                    <Route exact path={`${url}stylist`}><ManagerStylist /></Route>
+                                    <Route exact path={`${url}charge_of`}><ManagerChargeOf /></Route>
+                                    <Route exact path={`${url}makeup_hair`}><ManagerMakeup_hair /></Route>
+                                    <Route exact path={`${url}role`}><ManagerRole /></Route>
+                                    <Route ><Not_found /></Route>
+                                </Switch>
+                            </Content>
+                        </Layout>
                     </Layout>
-                </Layout>
-            </div>
+                    :
+                    <>
+                        <Switch>
+                            <Route exact path={`${url}user`}><Not_logged /></Route>
+                            <Route exact path={`${url}brand`}><Not_logged /></Route>
+                            <Route exact path={`${url}stylist`}><Not_logged /></Route>
+                            <Route exact path={`${url}charge_of`}><Not_logged /></Route>
+                            <Route exact path={`${url}makeup_hair`}><Not_logged /></Route>
+                            <Route exact path={`${url}role`}><Not_logged /></Route>
+
+                            <Route exact path={`${url}`}><Not_logged /></Route>
+                            <Route exact path={`${url}login`}>
+                                <Login_DB handleLogin_Index={this.handleLogin_Index} />
+                            </Route>
+                            <Route ><Not_found /></Route>
+                        </Switch>
+                    </>
+                }
+            </>
         );
     }
 

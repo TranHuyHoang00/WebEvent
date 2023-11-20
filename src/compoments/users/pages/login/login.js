@@ -108,7 +108,8 @@ class login extends React.Component {
                                                 <div key={item.id} onClick={() => this.onClickOpenModal(item)}
                                                     className='text-center space-y-[10px] p-[5px] cursor-pointer 
                                             hover:scale-105 duration-300 ease-in-out hover:text-yellow-500'>
-                                                    <Avatar className='border-[2px] border-white ' size={130} src={require(`../../../../assets/images/${item.avatar}`).default} />
+                                                    <Avatar className='border-[2px] border-white ' size={130} src={(item.avatar == "" || !item.avatar) ? require(`../../../../assets/images/None.jpg`).default
+                                                        : require(`../../../../assets/images/${item && item.avatar}`).default} />
                                                     <div className='truncate'><label>{item.fullname}</label></div>
                                                 </div>
                                             );
@@ -126,7 +127,8 @@ class login extends React.Component {
                                                 <div key={item.id} onClick={() => this.onClickOpenModal(item)}
                                                     className='text-center space-y-[10px] p-[5px] cursor-pointer 
                                             hover:scale-105 duration-300 ease-in-out hover:text-yellow-500'>
-                                                    <Avatar className='border-[2px] border-white ' size={130} src={require(`../../../../assets/images/${item.avatar}`).default} />
+                                                    <Avatar className='border-[2px] border-white ' size={130} src={(item.avatar == "" || !item.avatar) ? require(`../../../../assets/images/None.jpg`).default
+                                                        : require(`../../../../assets/images/${item && item.avatar}`).default} />
                                                     <div className='truncate'><label>{item.fullname}</label></div>
                                                 </div>
                                             );
@@ -160,7 +162,8 @@ class login extends React.Component {
                                                 <div className=" p-[16px] rounded-full font-[400]  text-[16px]
                     group relative text-white transition-colors duration-[400ms] italic ">
                                                     <div className='text-center space-y-[5px] hover:scale-105 duration-500 ease-in-out'>
-                                                        <Avatar src={require(`../../../../assets/images/${data_user && data_user.avatar}`).default} size={130}
+                                                        <Avatar src={(data_user.avatar == "" || !data_user.avatar) ? require(`../../../../assets/images/None.jpg`).default
+                                                            : require(`../../../../assets/images/${data_user && data_user.avatar}`).default} size={130}
                                                             className='border-[2px] border-white ' />
                                                         <div><span className='text-yellow-400 text-[20px]'>{data_user && data_user.fullname}</span></div>
                                                     </div>
