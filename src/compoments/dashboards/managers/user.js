@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
-import { Table, Space, Modal, Divider, Button, Input, Popconfirm, Image, Select } from 'antd';
-import { AiFillEdit, AiFillDelete, AiFillEye } from "react-icons/ai";
 import { withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Table, Space, Modal, Divider, Button, Input, Popconfirm, Tooltip, Image, Select } from 'antd';
+import { AiFillEdit, AiFillDelete, AiFillEye } from "react-icons/ai";
 import { get_list_user, create_user, get_user, delete_user, edit_user } from '../../../services/user_services';
 import { get_list_role } from '../../../services/role_services';
-
 class user extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            open_create: false,
-            open_detail: false,
-            open_edit: false,
+            modal_create: false,
+            modal_detail: false,
+            modal_edit: false,
             data_user: {},
             data_users: [],
             id_user: '',
             data_roles: [],
+            is_check_edit_image: false,
         }
     }
     async componentDidMount() {
@@ -27,7 +27,6 @@ class user extends Component {
         try {
             let data = await get_list_user();
             if (data && data.data && data.data.success == 1) {
-                console.log(data.data.data);
                 this.setState({ data_users: data.data.data })
             }
         } catch (e) {
@@ -56,7 +55,6 @@ class user extends Component {
         try {
             let data = await get_user(id);
             if (data && data.data && data.data.success == 1) {
-                console.log(data.data.data);
                 this.setState({ data_user: data.data.data })
             }
         } catch (e) {
@@ -86,7 +84,7 @@ class user extends Component {
             const reader = new FileReader();
             reader.onloadend = () => {
                 this.setState({
-                    image_show: true,
+                    is_check_edit_image: true,
                     data_user: {
                         ...this.state.data_user,
                         avatar: reader.result
@@ -97,20 +95,20 @@ class user extends Component {
         }
     }
     openForm = async (name, value, id) => {
-        if (name == 'create') { this.setState({ open_create: value }) }
+        if (name == 'create') { this.setState({ modal_create: value }) }
         if (name == 'detail') {
             if (id == null) {
-                this.setState({ open_detail: value, data_user: {} });
+                this.setState({ modal_detail: value, data_user: {} });
             } else {
-                this.setState({ open_detail: value });
+                this.setState({ modal_detail: value });
                 await this.get_user(id);
             }
         }
         if (name == 'edit') {
             if (id == null) {
-                this.setState({ open_edit: value, data_user: {} });
+                this.setState({ modal_edit: value, data_user: {} });
             } else {
-                this.setState({ open_edit: value, id_user: id });
+                this.setState({ modal_edit: value, id_user: id });
                 await this.get_user(id);
             }
         }
@@ -123,8 +121,9 @@ class user extends Component {
     }
     Validation = (data) => {
         let data_users = this.state.data_users;
+        let modal_create = this.state.modal_create;
         for (const i of data_users) {
-            if (i.username == data.username && this.state.open_create == true) {
+            if (i.username == data.username && modal_create == true) {
                 return { mess: "Username already exists ", code: 1 };
             };
         }
@@ -134,7 +133,7 @@ class user extends Component {
         if (this.isCheckSpace(data.username) == true) {
             return { mess: "Username contains spaces", code: 1 };
         }
-        if (!data.password) {
+        if (!data.password && this.state.modal_create == true) {
             return { mess: "Password cannot be blank", code: 1 };
         }
         if (this.isCheckSpace(data.password) == true) {
@@ -143,7 +142,7 @@ class user extends Component {
         if (!data.fullname) {
             return { mess: "Fullname cannot be blank", code: 1 };
         }
-        if (!data.role_id) {
+        if (!data.role_id && this.state.modal_create == true) {
             return { mess: "Role cannot be blank", code: 1 };
         }
         return { code: 0 };
@@ -153,10 +152,11 @@ class user extends Component {
         if (result.code == 0) {
             try {
                 let data = await create_user(this.state.data_user);
+                console.log(data);
                 if (data && data.data && data.data.success == 1) {
                     toast.success('Success')
                     await this.get_list_user();
-                    this.setState({ open_create: false, data_user: {} })
+                    this.setState({ modal_create: false, data_user: {} })
                 } else {
                     toast.error('Error')
                 }
@@ -168,14 +168,19 @@ class user extends Component {
         }
     }
     handleEdit = async (id) => {
-        let result = this.Validation(this.state.data_user);
+        let data_user = this.state.data_user;
+        if (this.state.is_check_edit_image == false) {
+            delete data_user.avatar;
+        }
+        let result = this.Validation(data_user);
         if (result.code == 0) {
             try {
-                let data = await edit_user(id, this.state.data_user);
+                let data = await edit_user(id, data_user);
+                console.log(data);
                 if (data && data.data && data.data.success == 1) {
                     toast.success('Success')
                     await this.get_list_user();
-                    this.setState({ open_edit: false, data_user: {} })
+                    this.setState({ modal_edit: false, data_user: {} })
                 } else {
                     toast.error('Error')
                 }
@@ -201,6 +206,7 @@ class user extends Component {
     }
     render() {
         let data_user = this.state.data_user;
+        let data_roles = this.state.data_roles;
         const columns = [
             {
                 title: 'ID', dataIndex: 'id', responsive: ['md'], width: 100,
@@ -210,7 +216,7 @@ class user extends Component {
                 title: 'AVATAR', dataIndex: 'avatar', responsive: ['md'], width: 120,
                 render: (avatar) =>
                     <div className='flex items-center justify-center'>
-                        <Image className='object-cover' width={80} height={80}
+                        <Image className='object-cover rounded-[5px]' width={80} height={80}
                             src={(avatar == "" || avatar == null) ? require(`../../../assets/images/None.jpg`).default : avatar} />
                     </div>
                 ,
@@ -225,44 +231,44 @@ class user extends Component {
             },
             {
                 title: 'ROLE', dataIndex: 'role', responsive: ['md'],
-                render: (role) =>
-                    <h1>{role && role.name}</h1>
+                render: (role) => <h1>{role && role.name}</h1>,
+                sorter: (a, b) => a.role.name.localeCompare(b.role.name),
             },
             {
-                title: 'ACTION', width: 100,
-                render: (_, record) => (
-                    <Space size="middle">
-                        <a onClick={() => this.openForm('detail', true, record.id)}><AiFillEye /></a>
-                        <a onClick={() => this.openForm('edit', true, record.id)}><AiFillEdit /></a>
-                        <Popconfirm title="Are you sure you want to delete?" okType='default' onConfirm={() => this.handleDelete(record.id)}>
-                            <a><AiFillDelete /></a>
+                title: 'ACTION', width: 120,
+                render: (_, item) => (
+                    <Space size="middle" >
+                        <Tooltip title="Detail"><a onClick={() => this.openForm('detail', true, item.id)}><AiFillEye /></a></Tooltip>
+                        <Tooltip title="Edit"><a onClick={() => this.openForm('edit', true, item.id)}><AiFillEdit /></a></Tooltip>
+                        <Popconfirm title="Are you sure you want to DELETE?" placement="right"
+                            okType='default' onConfirm={() => this.handleDelete(item.id)}>
+                            <Tooltip title="Delete"> <a><AiFillDelete /></a></Tooltip>
                         </Popconfirm>
-                    </Space>
+                    </Space >
                 ),
             },
         ];
         return (
             <>
-                <div className='m-[10px] p-[10px] border shadow-md bg-white'>
-                    <Button onClick={() => this.openForm('create', true)}
-                        type='default' size='middle' className='bg-black text-white'>
-                        ADD NEW
+                <div className="m-[10px] p-[10px] border shadow-md bg-white">
+                    <Button onClick={() => this.openForm("create", true)}
+                        type="default" size="middle" className="bg-[#001529] text-white">
+                        CREATE
                     </Button>
-                    <Divider>ACCOUNT</Divider>
+                    <Divider></Divider>
                     <Table columns={columns} dataSource={this.state.data_users}
-                        size="middle" bordered
-                        pagination={{ pageSize: 7, }}
-                        scroll={{ y: 300, x: 300, }} />
-                </div>
-                <Modal title="ADD NEW" open={this.state.open_create}
-                    okText={'CONFIRM'} okType={'default'} cancelText={'CANCEL'}
+                        size="middle" bordered pagination={{ pageSize: 6 }} scroll={{ y: 300, x: 300 }} />
+                </div >
+
+                <Modal title="CREATE" open={this.state.modal_create}
+                    okText={"CONFIRM"} okType={"default"} cancelText={"CANCEL"}
                     onOk={() => this.handleCreate()}
-                    onCancel={() => this.openForm('create', false)}
-                    width={300} >
+                    onCancel={() => this.openForm("create", false)}
+                    width={300}>
                     <div className='space-y-[10px]'>
                         <div className='flex items-center justify-center'>
-                            <Image width={140} height={140} src={this.state.data_user.avatar}
-                                className='border-[2px] border-black object-cover rounded-full' />
+                            <Image width={200} height={200} src={data_user.avatar}
+                                className=' object-cover rounded-[5px]' />
                         </div>
                         <div className='text-center'>
                             <input id="load_file" type="file" accept="image/*" hidden
@@ -292,21 +298,21 @@ class user extends Component {
                             <label>Role<span className='text-red-500'> *</span></label><br />
                             <Select className='w-full'
                                 onChange={(event) => this.handleOnChangeRole(event, 'role_id')}
-                                options={this.state.data_roles}
+                                options={data_roles}
                             />
                         </div>
                     </div>
                 </Modal>
-                <Modal title="DETAIL" open={this.state.open_detail}
-                    okText={'CONFIRM'} okType={'default'} cancelText={'CANCEL'}
-                    onOk={() => this.openForm('detail', false, null)}
-                    onCancel={() => this.openForm('detail', false, null)}
-                    width={300}
-                >
+
+                <Modal title="DETAIL" open={this.state.modal_detail}
+                    okText={"EXIT"} okType={"default"} cancelText={"CANCEL"}
+                    onOk={() => this.openForm("detail", false, null)}
+                    onCancel={() => this.openForm("detail", false, null)}
+                    width={300}>
                     <div className='space-y-[10px]'>
                         <div className='flex items-center justify-center'>
-                            <Image width={140} height={140}
-                                className='border-[2px] border-black object-cover rounded-full'
+                            <Image width={200} height={200}
+                                className=' object-cover rounded-[5px]'
                                 src={(data_user.avatar == "" || data_user.avatar == null) ? require(`../../../assets/images/None.jpg`).default : data_user.avatar} />
                         </div>
                         <div>
@@ -323,16 +329,16 @@ class user extends Component {
                         </div>
                     </div>
                 </Modal>
-                <Modal title="EDIT" open={this.state.open_edit}
-                    okText={'CONFIRM'} okType={'default'} cancelText={'CANCEL'}
-                    onOk={() => this.handleEdit(this.state.idUser)}
-                    onCancel={() => this.openForm('edit', false, null)}
-                    width={300}
-                >
+
+                <Modal title="EDIT" open={this.state.modal_edit} okText={"CONFIRM"}
+                    okType={"default"} cancelText={"CANCEL"}
+                    onOk={() => this.handleEdit(this.state.id_user)}
+                    onCancel={() => this.openForm("edit", false, null)}
+                    width={300}>
                     <div className='space-y-[10px]'>
                         <div className='flex items-center justify-center'>
-                            <Image width={140} height={140} src={this.state.data_user.avatar}
-                                className='border-[2px] border-black object-cover rounded-full' />
+                            <Image width={200} height={200} src={this.state.data_user.avatar}
+                                className=' object-cover rounded-[5px]' />
                         </div>
                         <div className='text-center'>
                             <input id="load_file" type="file" accept="image/*" hidden

@@ -73,6 +73,9 @@ class role extends Component {
   Validation = (data) => {
     let data_roles = this.state.data_roles;
     for (const i of data_roles) {
+      if (i.name == data.name && i.id !== data.id && this.state.modal_edit == true) {
+        return { mess: "Name already exists ", code: 1 };
+      };
       if (i.name == data.name && this.state.modal_create == true) {
         return { mess: "Name already exists ", code: 1 };
       };

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Table, Space, Modal, Divider, Button, Input, Popconfirm, Tooltip, Image, Carousel } from 'antd';
+import { Table, Space, Modal, Divider, Button, Input, Popconfirm, Tooltip, Image, Carousel, } from 'antd';
 import { AiFillEdit, AiFillDelete, AiFillEye, AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
 import { get_list_stylist, create_stylist, get_stylist, delete_stylist, edit_stylist } from '../../../services/stylist_services';
 class stylist extends Component {
@@ -11,12 +11,8 @@ class stylist extends Component {
             modal_create: false,
             modal_detail: false,
             modal_edit: false,
-            data_stylist: { id: '1', name: 'AMLOO', img: [] },
-            data_stylists: [
-                { id: '1', name: 'AMLOO', img: [{ id: '1', value: '1.jpg' }, { id: '2', value: '2.jpg' }] },
-                { id: '2', name: 'XIOLO', img: [{ id: '1', value: '3.jpg' }, { id: '2', value: '4.jpg' }] },
-                { id: '3', name: 'XEXOKA', img: [] },
-            ],
+            data_stylist: {},
+            data_stylists: [],
             id_stylist: '',
             data_images: [],
         }
@@ -27,6 +23,7 @@ class stylist extends Component {
     get_list_stylist = async () => {
         try {
             let data = await get_list_stylist();
+            console.log(data);
             if (data && data.data && data.data.success == 1) {
                 this.setState({ data_stylists: data.data.data })
             }
@@ -82,10 +79,13 @@ class stylist extends Component {
         return { code: 0 };
     }
     handleCreate = async () => {
-        let result = this.Validation(this.state.data_stylist);
+        let data_stylist = this.state.data_stylist;
+        let data_images = this.state.data_images;
+        data_stylist.images = data_images;
+        let result = this.Validation(data_stylist);
         if (result.code == 0) {
             try {
-                let data = await create_stylist(this.state.data_stylist);
+                let data = await create_stylist(data_stylist);
                 if (data && data.data && data.data.success == 1) {
                     toast.success('Success')
                     await this.get_list_stylist();
@@ -138,7 +138,8 @@ class stylist extends Component {
             const reader = new FileReader();
             reader.onloadend = () => {
                 let data_images = this.state.data_images;
-                data_images.push(reader.result);
+                let obj = { value: reader.result }
+                data_images.push(obj);
                 this.setState({
                     data_images: data_images
                 })
@@ -160,19 +161,17 @@ class stylist extends Component {
                 sorter: (a, b) => a.id - b.id,
             },
             {
-                title: 'IMAGE', dataIndex: 'img', responsive: ['md'], width: 120,
-                render: (img) => (
+                title: 'IMAGE', dataIndex: 'images', responsive: ['md'], width: 120,
+                render: (images) => (
                     <>
-                        {img.length !== 0 ?
+                        {images.length !== 0 ?
                             <Carousel autoplay >
-                                {img && img.map((item, index) => {
+                                {images && images.map((item, index) => {
                                     return (
-                                        <>
-                                            <div key={item.id} className='flex items-center justify-center '>
-                                                <Image width={80} height={80} className='object-cover rounded-[5px] '
-                                                    src={require(`../../../assets/images/${item.value}`).default} />
-                                            </div>
-                                        </>
+                                        <div key={item.id} className='flex items-center justify-center '>
+                                            <Image width={80} height={80} className='object-cover rounded-[5px] '
+                                                src={item.value} />
+                                        </div>
                                     )
                                 })}
                             </Carousel>
@@ -215,7 +214,6 @@ class stylist extends Component {
                     <Table columns={columns} dataSource={this.state.data_stylists}
                         size="middle" bordered pagination={{ pageSize: 6 }} scroll={{ y: 300, x: 300 }} />
                 </div >
-
                 <Modal title="CREATE" open={this.state.modal_create}
                     okText={"CONFIRM"} okType={"default"} cancelText={"CANCEL"}
                     onOk={() => this.handleCreate()}
@@ -224,7 +222,7 @@ class stylist extends Component {
                     <div className="space-y-[10px]">
                         <div className='space-y-[5px]'>
                             <label>Image</label>
-                            <div className='flex items-center justify-center'>
+                            <div className='flex items-center justify-center border py-[10px] rounded-[5px]'>
                                 <button ><AiOutlineDoubleLeft /></button>
                                 <div className='h-[220px] w-[200px] '>
                                     <Carousel arrows autoplay dotPosition='top'>
@@ -233,7 +231,7 @@ class stylist extends Component {
                                                 <div key={index} className='flex items-center justify-center'>
                                                     <div className='text-center'>
                                                         <Image width={200} height={200} className='object-cover rounded-[5px] '
-                                                            src={item} />
+                                                            src={item.value} />
                                                         <Tooltip title="Delete">
                                                             <button onClick={() => this.handleDeleteImage(index)} className='text-white bg-red-600 px-[5px] h-[20px] rounded-[5px]'><AiFillDelete /></button>
                                                         </Tooltip>
@@ -262,25 +260,24 @@ class stylist extends Component {
                         </div>
                     </div>
                 </Modal>
-
                 <Modal title="DETAIL" open={this.state.modal_detail}
                     okText={"EXIT"} okType={"default"} cancelText={"CANCEL"}
                     onOk={() => this.openForm("detail", false, null)}
                     onCancel={() => this.openForm("detail", false, null)}
                     width={300}>
                     <div className="space-y-[10px]">
-                        {data_stylist && data_stylist.img && data_stylist.img.length !== 0 ?
+                        {data_stylist && data_stylist.images && data_stylist.images.length !== 0 ?
                             <div className='space-y-[5px]'>
                                 <label>Image</label>
                                 <div className='flex items-center justify-center'>
                                     <button ><AiOutlineDoubleLeft /></button>
-                                    <div className='h-[220px] w-[200px] '>
+                                    <div className='h-[150px] w-[150px] '>
                                         <Carousel arrows autoplay >
-                                            {data_stylist && data_stylist.img && data_stylist.img.map((item, index) => {
+                                            {data_stylist && data_stylist.images && data_stylist.images.map((item, index) => {
                                                 return (
                                                     <div key={item.id} className='flex items-center justify-center'>
                                                         <Image width={150} height={150} className='object-cover rounded-[5px] '
-                                                            src={require(`../../../assets/images/${item.value}`).default} />
+                                                            src={item.value} />
                                                     </div>
                                                 )
                                             })}

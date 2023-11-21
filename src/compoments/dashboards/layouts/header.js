@@ -19,10 +19,6 @@ class header extends Component {
             this.setState({ data_user: data_user.data.user })
         }
     }
-    onClickPage = (name) => {
-        if (name == 'home') { this.props.history.push(`/home`) };
-        if (name == 'profile') { this.props.history.push(`/home/profile`) };
-    }
     onClickLogout = () => {
         this.props.handleLogout_Index();
         remove_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_DB);
@@ -32,12 +28,6 @@ class header extends Component {
         let data_user = this.state.data_user;
         const items = [
             {
-                label: <a onClick={() => this.onClickPage('profile')}
-                    className='text-[16px] font-serif '>Profile</a>,
-                key: '0',
-                icon: <AiOutlineContainer />,
-            },
-            {
                 label: <a onClick={() => this.onClickLogout()}
                     className='text-[16px] font-serif'>Logout</a>,
                 key: '1',
@@ -46,7 +36,7 @@ class header extends Component {
         ];
         return (
             <div className='flex items-center justify-between'>
-                <div className='hover:text-yellow-400  duration-500 ease-in-out'>
+                <div className='hover:text-red-600 font-[500] duration-500 ease-in-out'>
                     <Dropdown
                         menu={{ items }}
                         trigger={['click', 'hover']}>

@@ -4,6 +4,7 @@ import { AiFillEye, AiFillEyeInvisible, } from "react-icons/ai";
 import { set_local_account } from '../../../auths/local_storage';
 import { toast } from 'react-toastify';
 import { Login } from '../../../services/login_services';
+import bg from '../../../assets/images/bg1.jpg';
 class login extends Component {
     constructor(props) {
         super(props);
@@ -60,7 +61,8 @@ class login extends Component {
     }
     render() {
         return (
-            <div className='h-screen w-screen flex items-center justify-center bg-black'>
+            <div className='h-screen w-screen flex items-center justify-center bg-center sm:bg-cover bg-no-repeat'
+                style={{ backgroundImage: `url(${bg})` }}>
                 <div className='space-y-[20px] p-[20px] '>
                     <div className='flex items-center justify-center '>
                         <img onClick={() => this.onClickPage()}

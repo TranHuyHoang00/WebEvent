@@ -71,6 +71,15 @@ class brand extends Component {
         return value.trim().length
     }
     Validation = (data) => {
+        let data_brands = this.state.data_brands;
+        for (const i of data_brands) {
+            if (i.name == data.name && i.id !== data.id && this.state.modal_edit == true) {
+                return { mess: "Name already exists ", code: 1 };
+            };
+            if (i.name == data.name && this.state.modal_create == true) {
+                return { mess: "Name already exists ", code: 1 };
+            };
+        }
         if (!data.name) {
             return { mess: "Name cannot be blank", code: 1 };
         }

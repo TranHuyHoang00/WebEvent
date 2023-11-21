@@ -4,7 +4,7 @@ import { DatabaseOutlined, } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import {
     AiFillGitlab, AiOutlineUser, AiOutlineQq, AiTwotoneSkin, AiFillAppstore, AiFillGithub, AiFillIdcard,
-    AiFillGold
+    AiFillGold, AiOutlineFieldTime
 } from "react-icons/ai";
 import { withRouter } from 'react-router-dom';
 import { get_local_account } from '../../auths/local_storage';
@@ -15,6 +15,7 @@ import ManagerStylist from './managers/stylist';
 import ManagerChargeOf from './managers/charge_of';
 import ManagerMakeup_hair from './managers/makeup_hair';
 import ManagerRole from './managers/role';
+import ManagerTime_location from './managers/time_locaiton';
 
 import Login_DB from './pages/login';
 import Not_logged from './pages_error/not_logged';
@@ -56,6 +57,7 @@ class index extends Component {
         const items = [
             this.getItem('Manager', 'table', <DatabaseOutlined />,
                 [
+                    this.getItem('Time location', 'time_location', <AiOutlineFieldTime />),
                     this.getItem('Stylist', 'stylist', <AiTwotoneSkin />),
                     this.getItem('Makeup hair', 'makeup_hair', <AiFillGitlab />),
                     this.getItem('Person in charge', 'charge_of', <AiOutlineQq />),
@@ -69,6 +71,7 @@ class index extends Component {
             this.getItem('Menu', 'menu', <AiFillAppstore />, [
                 this.getItem('Manager', 'table', <DatabaseOutlined />,
                     [
+                        this.getItem('Time location', 'time_location', <AiOutlineFieldTime />),
                         this.getItem('Stylist', 'stylist', <AiTwotoneSkin />),
                         this.getItem('Makeup hair', 'makeup_hair', <AiFillGitlab />),
                         this.getItem('Person in charge', 'charge_of', <AiOutlineQq />),
@@ -89,6 +92,9 @@ class index extends Component {
                     <Layout style={{ minHeight: '100vh', }} >
                         <Sider className='sm:block hidden'
                             collapsible collapsed={this.state.collapsed} onCollapse={(value) => this.setCollapsed(value)}>
+                            <div className='text-center text-white py-[10px] bg-[#002140] shadow-md'>
+                                <label className='font-[600] text-[17px] font-serif'>ADMIN</label>
+                            </div>
                             <Menu theme="dark" mode="inline" items={items} defaultSelectedKeys={['table']}
                                 onClick={(value) => this.onClickPage(value)} />
                         </Sider>
@@ -104,14 +110,16 @@ class index extends Component {
                             <Content className='py-[10px]'>
                                 <Switch>
                                     <Route exact path={`${url}`}><Empty /></Route>
-                                    <Route exact path={`${url}login`}><Not_found /></Route>
                                     <Route exact path={`${url}user`}><ManagerUser /></Route>
                                     <Route exact path={`${url}brand`}><ManagerBrand /></Route>
                                     <Route exact path={`${url}stylist`}><ManagerStylist /></Route>
                                     <Route exact path={`${url}charge_of`}><ManagerChargeOf /></Route>
                                     <Route exact path={`${url}makeup_hair`}><ManagerMakeup_hair /></Route>
                                     <Route exact path={`${url}role`}><ManagerRole /></Route>
-                                    <Route ><Not_found /></Route>
+                                    <Route exact path={`${url}time_location`}><ManagerTime_location /></Route>
+
+                                    <Route exact path={`${url}login`}><Empty /></Route>
+                                    <Route ><Empty /></Route>
                                 </Switch>
                             </Content>
                         </Layout>
@@ -119,13 +127,6 @@ class index extends Component {
                     :
                     <>
                         <Switch>
-                            <Route exact path={`${url}user`}><Not_logged /></Route>
-                            <Route exact path={`${url}brand`}><Not_logged /></Route>
-                            <Route exact path={`${url}stylist`}><Not_logged /></Route>
-                            <Route exact path={`${url}charge_of`}><Not_logged /></Route>
-                            <Route exact path={`${url}makeup_hair`}><Not_logged /></Route>
-                            <Route exact path={`${url}role`}><Not_logged /></Route>
-
                             <Route exact path={`${url}`}><Not_logged /></Route>
                             <Route exact path={`${url}login`}>
                                 <Login_DB handleLogin_Index={this.handleLogin_Index} />

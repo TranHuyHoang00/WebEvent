@@ -71,6 +71,15 @@ class charge_of extends Component {
         return value.trim().length
     }
     Validation = (data) => {
+        let data_charge_ofs = this.state.data_charge_ofs;
+        for (const i of data_charge_ofs) {
+            if (i.name == data.name && i.id !== data.id && this.state.modal_edit == true) {
+                return { mess: "Name already exists ", code: 1 };
+            };
+            if (i.name == data.name && this.state.modal_create == true) {
+                return { mess: "Name already exists ", code: 1 };
+            };
+        }
         if (!data.name) {
             return { mess: "Name cannot be blank", code: 1 };
         }
