@@ -15,6 +15,8 @@ class stylist extends Component {
             data_stylists: [],
             id_stylist: '',
             data_images: [],
+            is_update: false,
+            is_update_images: false,
         }
     }
     async componentDidMount() {
@@ -23,7 +25,6 @@ class stylist extends Component {
     get_list_stylist = async () => {
         try {
             let data = await get_list_stylist();
-            console.log(data);
             if (data && data.data && data.data.success == 1) {
                 this.setState({ data_stylists: data.data.data })
             }
@@ -45,6 +46,7 @@ class stylist extends Component {
         let copyState = { ...this.state.data_stylist };
         copyState[id] = event.target.value;
         this.setState({
+            is_update: true,
             data_stylist: {
                 ...copyState
             }
@@ -62,9 +64,9 @@ class stylist extends Component {
         }
         if (name == 'edit') {
             if (id == null) {
-                this.setState({ modal_edit: value, data_stylist: {} });
+                this.setState({ modal_edit: value, data_stylist: {}, is_update: false });
             } else {
-                this.setState({ modal_edit: value, id_stylist: id });
+                this.setState({ modal_edit: value, id_stylist: id, is_update: false });
                 await this.get_stylist(id);
             }
         }
@@ -101,23 +103,32 @@ class stylist extends Component {
         }
     }
     handleEdit = async (id) => {
-        let result = this.Validation(this.state.data_stylist);
-        if (result.code == 0) {
-            try {
-                let data = await edit_stylist(id, this.state.data_stylist);
-                if (data && data.data && data.data.success == 1) {
-                    toast.success('Success')
-                    await this.get_list_stylist();
-                    this.setState({ modal_edit: false, data_stylist: {} })
-                } else {
-                    toast.error('Error')
-                }
-            } catch (e) {
-                toast.error('System error');
-            }
+        let data_stylist = this.state.data_stylist;
+        let data_images = this.state.data_images;
+        if (this.state.is_update == false) {
+            toast.success('Success')
+            this.setState({ modal_edit: false, data_stylist: {} })
         } else {
-            toast.error(result.mess);
+            data_stylist.images = data_images;
+            let result = this.Validation(data_stylist);
+            if (result.code == 0) {
+                try {
+                    let data = await edit_stylist(id, data_stylist);
+                    if (data && data.data && data.data.success == 1) {
+                        toast.success('Success')
+                        await this.get_list_stylist();
+                        this.setState({ modal_edit: false, data_stylist: {}, data_images: [] })
+                    } else {
+                        toast.error('Error')
+                    }
+                } catch (e) {
+                    toast.error('System error');
+                }
+            } else {
+                toast.error(result.mess);
+            }
         }
+
     }
     handleDelete = async (id) => {
         try {
@@ -151,6 +162,48 @@ class stylist extends Component {
         let data_images = this.state.data_images;
         data_images.splice(index, 1);
         this.setState({ data_images: data_images })
+    }
+    onChangeImageEdit = (image) => {
+        const file = image.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                let data_images = this.state.data_images;
+                let data_stylist = this.state.data_stylist;
+                let obj = { value: reader.result }
+                data_images.push(obj);
+                data_stylist.images.push(obj);
+                this.setState({
+                    is_update: true,
+                    data_stylist: data_stylist,
+                    data_images: data_images
+                })
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    handleDeleteImageEdit = (index, id) => {
+        let data_images = this.state.data_images;
+        let data_stylist = this.state.data_stylist;
+
+        data_stylist.images.splice(index, 1);
+        if (id !== undefined) {
+
+            if (data_stylist.delete_images) {
+                data_stylist.delete_images.push(id);
+            } else {
+                data_stylist.delete_images = [id]
+            }
+        } else {
+            let objectsWithoutId = data_stylist.images.filter(obj => obj.id);
+            let countWithoutId = objectsWithoutId.length;
+            data_images.splice(index - countWithoutId, 1);
+        }
+        this.setState({
+            is_update: true,
+            data_images: data_images,
+            data_stylist: data_stylist
+        })
     }
     render() {
         let data_stylist = this.state.data_stylist;
@@ -222,15 +275,15 @@ class stylist extends Component {
                     <div className="space-y-[10px]">
                         <div className='space-y-[5px]'>
                             <label>Image</label>
-                            <div className='flex items-center justify-center border py-[10px] rounded-[5px]'>
+                            <div className='flex items-center justify-center'>
                                 <button ><AiOutlineDoubleLeft /></button>
-                                <div className='h-[220px] w-[200px] '>
+                                <div className='h-[170px] w-[150px] '>
                                     <Carousel arrows autoplay dotPosition='top'>
                                         {data_images && data_images.map((item, index) => {
                                             return (
                                                 <div key={index} className='flex items-center justify-center'>
                                                     <div className='text-center'>
-                                                        <Image width={200} height={200} className='object-cover rounded-[5px] '
+                                                        <Image width={150} height={150} className='object-cover rounded-[5px] '
                                                             src={item.value} />
                                                         <Tooltip title="Delete">
                                                             <button onClick={() => this.handleDeleteImage(index)} className='text-white bg-red-600 px-[5px] h-[20px] rounded-[5px]'><AiFillDelete /></button>
@@ -305,6 +358,39 @@ class stylist extends Component {
                     onCancel={() => this.openForm("edit", false, null)}
                     width={300}>
                     <div className="space-y-[10px]">
+                        <div className='space-y-[5px]'>
+                            <label>Image</label>
+                            <div className='flex items-center justify-center'>
+                                <button ><AiOutlineDoubleLeft /></button>
+                                <div className='h-[170px] w-[150px] '>
+                                    <Carousel arrows autoplay dotPosition='top'>
+                                        {data_stylist && data_stylist.images && data_stylist.images.map((item, index) => {
+                                            return (
+                                                <div key={index} className='flex items-center justify-center'>
+                                                    <div className='text-center'>
+                                                        <Image width={150} height={150} className='object-cover rounded-[5px] '
+                                                            src={item.value} />
+                                                        <Tooltip title="Delete">
+                                                            <button onClick={() => this.handleDeleteImageEdit(index, item.id)} className='text-white bg-red-600 px-[5px] h-[20px] rounded-[5px]'><AiFillDelete /></button>
+                                                        </Tooltip>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+                                    </Carousel>
+                                </div>
+                                <button ><AiOutlineDoubleRight /></button>
+                            </div>
+                        </div>
+                        <div className='text-center pt-[10px]'>
+                            <input id="load_file" type="file" accept="image/*" hidden
+                                onChange={(image) => this.onChangeImageEdit(image)}
+                            />
+                            <label htmlFor="load_file"
+                                className=' border rounded-[5px] px-[10px] py-[3px] cursor-pointer shadow-md'>
+                                Add image
+                            </label>
+                        </div>
                         <div>
                             <label>Name<span className="text-red-500"> *</span></label>
                             <Input value={data_stylist.name}

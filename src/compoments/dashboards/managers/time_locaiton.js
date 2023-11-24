@@ -94,6 +94,7 @@ class time_location extends Component {
         if (!data.make_up_time) {
             return { mess: "Makeup time cannot be blank", code: 1 };
         }
+
         if (make_up_time >= show_time) {
             return { mess: "Makeup time must be greater than Show time", code: 1 };
         }

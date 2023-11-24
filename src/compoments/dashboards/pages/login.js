@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { AiFillEye, AiFillEyeInvisible, } from "react-icons/ai";
 import { set_local_account } from '../../../auths/local_storage';
 import { toast } from 'react-toastify';
 import { Login } from '../../../services/login_services';
+import { Input, Button } from 'antd';
 import bg from '../../../assets/images/bg1.jpg';
 class login extends Component {
     constructor(props) {
@@ -46,9 +46,15 @@ class login extends Component {
             try {
                 let data = await Login(this.state.username, this.state.password);
                 if (data && data.data && data.data.success == 1) {
-                    set_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_DB, data.data.data);
-                    this.props.history.push(`/dashboard`);
-                    this.props.handleLogin_Index();
+                    let data_user = data.data.data;
+                    if (data_user.user && data_user.user.role && data_user.user.role.name == 'Admin') {
+                        set_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_DB, data.data.data);
+                        this.props.history.push(`/dashboard`);
+                        this.props.handleLogin_Index();
+                    } else {
+                        toast.error("Usename or password is incorrect")
+                    }
+
                 } else {
                     toast.error("Usename or password is incorrect")
                 }
@@ -61,53 +67,24 @@ class login extends Component {
     }
     render() {
         return (
-            <div className='h-screen w-screen flex items-center justify-center bg-center sm:bg-cover bg-no-repeat'
+            <div className='h-screen w-screen flex items-center justify-center bg-center sm:bg-cover bg-no-repeat bg-black'
                 style={{ backgroundImage: `url(${bg})` }}>
-                <div className='space-y-[20px] p-[20px] '>
-                    <div className='flex items-center justify-center '>
-                        <img onClick={() => this.onClickPage()}
-                            className='h-[120px] w-auto cursor-pointer hover:scale-105 duration-500 ease-in-out'
-                            src='https://rebelsaintrecords.com/wp-content/themes/yootheme/cache/c3/1_5-removebg-preview-c32c9ec9.webp' />
+                <div className='shadow-md border rounded-[5px] p-[10px] space-y-[20px]  bg-transparent text-white'>
+                    <div className='text-center font-[600] text-[22px]'>
+                        <label>ADMIN</label>
                     </div>
-                    <div className='space-y-[30px] text-white'>
-                        <div className='text-[18px]'>
-                            <div className=''>
-                                <label>Username </label>
-                            </div>
-                            <div className=''>
-                                <input onChange={(event) => this.handleOnChangeUsername(event)}
-                                    className="border-b-[2px] p-[5px] w-full
-                        bg-transparent  text-center focus:border-b-[2px] focus:ring-0 focus:outline-none focus:border-[#4acec7fa] hover:border-[#4acec7fa]" />
-
-                            </div>
-                        </div>
-                        <div className=' text-[18px]'>
-                            <div className=''>
-                                <label>Password </label>
-                            </div>
-                            <div className='relative '>
-                                <input onChange={(event) => this.handleOnChangePassWord(event)}
-                                    type={this.state.show_password == false ? "password" : "text"} className="border-b-[2px] p-[5px] w-full
-                        bg-transparent  text-center focus:border-b-[2px] focus:ring-0 focus:outline-none focus:border-[#4acec7fa] hover:border-[#4acec7fa]" />
-                                {this.state.show_password == false ?
-                                    <span onClick={() => this.onClickShowPassword()}
-                                        className='absolute right-0 top-[10px] text-white cursor-pointer'><AiFillEye /></span>
-                                    :
-                                    <span onClick={() => this.onClickShowPassword()}
-                                        className='absolute right-0 top-[10px] text-white cursor-pointer'><AiFillEyeInvisible /></span>
-                                }
-                            </div>
-                        </div>
+                    <div>
+                        <label>Name<span className="text-red-500"> *</span></label>
+                        <Input
+                            onChange={(event) => this.handleOnChangeUsername(event)} />
                     </div>
-                    <div onClick={() => this.handleLogin()}
-                        className="px-5 py-2.5 relative rounded-[10px] group overflow-hidden  bg-white text-black 
-                            hover:scale-105 transition-all duration-500 ease-out cursor-pointer">
-                        <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-500 -translate-x-full
-                                bg-gradient-to-br from-[#ff8a05] via-[#ff5478] to-[#ff00c6] group-hover:translate-x-0 ease"></span>
-                        <div className="relative text-center group-hover:text-white font-[600]">
-                            LOGIN
-                        </div>
+                    <div>
+                        <label>Password<span className="text-red-500"> *</span></label>
+                        <Input.Password
+                            onChange={(event) => this.handleOnChangePassWord(event)} />
                     </div>
+                    <Button onClick={() => this.handleLogin()}
+                        size='large' className='w-full bg-blue-500 text-white'>Login</Button>
                 </div>
             </div>
         );

@@ -4,7 +4,7 @@ import { DatabaseOutlined, } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import {
     AiFillGitlab, AiOutlineUser, AiOutlineQq, AiTwotoneSkin, AiFillAppstore, AiFillGithub, AiFillIdcard,
-    AiFillGold, AiOutlineFieldTime
+    AiFillGold, AiOutlineFieldTime, AiFillCarryOut, AiOutlineContainer
 } from "react-icons/ai";
 import { withRouter } from 'react-router-dom';
 import { get_local_account } from '../../auths/local_storage';
@@ -16,6 +16,7 @@ import ManagerChargeOf from './managers/charge_of';
 import ManagerMakeup_hair from './managers/makeup_hair';
 import ManagerRole from './managers/role';
 import ManagerTime_location from './managers/time_locaiton';
+import ManagerCalender from './managers/calender/calender';
 
 import Login_DB from './pages/login';
 import Not_logged from './pages_error/not_logged';
@@ -57,6 +58,7 @@ class index extends Component {
         const items = [
             this.getItem('Manager', 'table', <DatabaseOutlined />,
                 [
+                    this.getItem('Calender', '', <AiOutlineContainer />),
                     this.getItem('Time location', 'time_location', <AiOutlineFieldTime />),
                     this.getItem('Stylist', 'stylist', <AiTwotoneSkin />),
                     this.getItem('Makeup hair', 'makeup_hair', <AiFillGitlab />),
@@ -71,6 +73,7 @@ class index extends Component {
             this.getItem('Menu', 'menu', <AiFillAppstore />, [
                 this.getItem('Manager', 'table', <DatabaseOutlined />,
                     [
+                        this.getItem('Calender', '', <AiOutlineContainer />),
                         this.getItem('Time location', 'time_location', <AiOutlineFieldTime />),
                         this.getItem('Stylist', 'stylist', <AiTwotoneSkin />),
                         this.getItem('Makeup hair', 'makeup_hair', <AiFillGitlab />),
@@ -109,7 +112,7 @@ class index extends Component {
                             </Header>
                             <Content className='py-[10px]'>
                                 <Switch>
-                                    <Route exact path={`${url}`}><Empty /></Route>
+                                    <Route exact path={`${url}`}><ManagerCalender /></Route>
                                     <Route exact path={`${url}user`}><ManagerUser /></Route>
                                     <Route exact path={`${url}brand`}><ManagerBrand /></Route>
                                     <Route exact path={`${url}stylist`}><ManagerStylist /></Route>
