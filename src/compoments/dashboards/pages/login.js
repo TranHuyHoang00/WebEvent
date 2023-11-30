@@ -45,16 +45,17 @@ class login extends Component {
         if (result.code == 0) {
             try {
                 let data = await Login(this.state.username, this.state.password);
+                console.log(data);
                 if (data && data.data && data.data.success == 1) {
                     let data_user = data.data.data;
-                    if (data_user.user && data_user.user.role && data_user.user.role.name == 'Admin') {
-                        set_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_DB, data.data.data);
-                        this.props.history.push(`/dashboard`);
-                        this.props.handleLogin_Index();
-                    } else {
-                        toast.error("Usename or password is incorrect")
-                    }
+                    set_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_DB, data.data.data);
+                    this.props.history.push(`/dashboard`);
+                    this.props.handleLogin_Index();
+                    // if (data_user.user && data_user.user.role && data_user.user.role.name == 'Admin') {
 
+                    // } else {
+                    //     toast.error("Usename or password is incorrect")
+                    // }
                 } else {
                     toast.error("Usename or password is incorrect")
                 }
