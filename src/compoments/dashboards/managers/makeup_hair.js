@@ -94,7 +94,8 @@ class makeup_hair extends Component {
                 if (data && data.data && data.data.success == 1) {
                     toast.success('Success')
                     await this.get_list_makeup_hair();
-                    this.setState({ modal_create: false, data_makeup_hair: {} })
+                    this.setState({ data_makeup_hair: {}, modal_create: false, })
+
                 } else {
                     toast.error('Error')
                 }
@@ -315,12 +316,12 @@ class makeup_hair extends Component {
                         </div>
                         <div>
                             <label>Make up<span className="text-red-500"> *</span></label>
-                            <Input value={data_makeup_hair.name} placeholder="Make up cannot be blank"
+                            <Input value={data_makeup_hair.make_up} placeholder="Make up cannot be blank"
                                 onChange={(event) => this.handleOnchangeInput(event, "make_up")} />
                         </div>
                         <div>
                             <label>Make hair<span className="text-red-500"> *</span></label>
-                            <Input value={data_makeup_hair.name} placeholder="Make hair cannot be blank"
+                            <Input value={data_makeup_hair.make_hair} placeholder="Make hair cannot be blank"
                                 onChange={(event) => this.handleOnchangeInput(event, "make_hair")} />
                         </div>
                     </div>

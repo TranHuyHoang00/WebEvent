@@ -152,11 +152,10 @@ class user extends Component {
         if (result.code == 0) {
             try {
                 let data = await create_user(this.state.data_user);
-                console.log(data);
                 if (data && data.data && data.data.success == 1) {
                     toast.success('Success')
-                    await this.get_list_user();
                     this.setState({ modal_create: false, data_user: {} })
+                    await this.get_list_user();
                 } else {
                     toast.error('Error')
                 }
@@ -281,17 +280,17 @@ class user extends Component {
                         </div>
                         <div>
                             <label>Username<span className='text-red-500'> *</span></label>
-                            <Input placeholder='Cannot be blank'
+                            <Input value={data_user.username} placeholder='Cannot be blank'
                                 onChange={(event) => this.handleOnchangeInput(event, 'username')} />
                         </div>
                         <div>
                             <label>Password<span className='text-red-500'> *</span></label>
-                            <Input.Password placeholder='Cannot be blank'
+                            <Input.Password value={data_user.password} placeholder='Cannot be blank'
                                 onChange={(event) => this.handleOnchangeInput(event, 'password')} />
                         </div>
                         <div>
                             <label>Fullname<span className='text-red-500'> *</span></label>
-                            <Input placeholder='Cannot be blank'
+                            <Input value={data_user.fullname} placeholder='Cannot be blank'
                                 onChange={(event) => this.handleOnchangeInput(event, 'fullname')} />
                         </div>
                         <div>

@@ -26,7 +26,7 @@ class calender extends Component {
             data_schedules_date: [],
             type_filter: {
                 user_id: 0,
-                date: '22-11-2023',
+                date: '',
                 type_date: 1,
             },
             id_schedule: '',
@@ -287,6 +287,7 @@ class calender extends Component {
     handleOnchangeUser = async (value) => {
         let type_filter = this.state.type_filter;
         type_filter.user_id = value;
+        type_filter.type_date = 1;
         await this.get_list_schedule(type_filter);
     }
     render() {
@@ -356,18 +357,21 @@ class calender extends Component {
                             cellRender={(current, info) => this.calender_render(current, info)} />
                     </ConfigProvider>
                 </div >
-                <Modal_create modal_create={this.state.modal_create} openForm={this.openForm}
-                    date_select={this.state.date_select} get_list_schedule={this.get_list_schedule}
-                    type_filter={this.state.type_filter} />
-
-                <Modal_detail modal_detail={this.state.modal_detail} openForm={this.openForm}
-                    date_select={this.state.date_select} data_schedule={this.state.data_schedule} />
-
-                <Modal_edit modal_edit={this.state.modal_edit} openForm={this.openForm}
-                    date_select={this.state.date_select} data_schedule={this.state.data_schedule}
-                    type_filter={this.state.type_filter} id_schedule={this.state.id_schedule}
-                    get_list_schedule={this.get_list_schedule} />
-
+                {this.state.modal_create == true &&
+                    <Modal_create modal_create={this.state.modal_create} openForm={this.openForm}
+                        date_select={this.state.date_select} get_list_schedule={this.get_list_schedule}
+                        type_filter={this.state.type_filter} />
+                }
+                {this.state.modal_detail == true &&
+                    <Modal_detail modal_detail={this.state.modal_detail} openForm={this.openForm}
+                        date_select={this.state.date_select} data_schedule={this.state.data_schedule} />
+                }
+                {this.state.modal_edit == true &&
+                    <Modal_edit modal_edit={this.state.modal_edit} openForm={this.openForm}
+                        date_select={this.state.date_select} data_schedule={this.state.data_schedule}
+                        type_filter={this.state.type_filter} id_schedule={this.state.id_schedule}
+                        get_list_schedule={this.get_list_schedule} />
+                }
                 <Modal title={`SCHEDULE FOR DATE: ${this.state.date_select}`} open={this.state.modal_list_schedule}
                     okText={"EXIT"} okType={"default"} cancelText={"CANCEL"}
                     onOk={() => this.openForm("modal_list_schedule", false)}

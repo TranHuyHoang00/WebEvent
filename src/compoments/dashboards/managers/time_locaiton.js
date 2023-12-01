@@ -48,7 +48,6 @@ class time_location extends Component {
             }
         });
     }
-
     openForm = async (name, value, id) => {
         if (name == 'create') { this.setState({ modal_create: value }) }
         if (name == 'detail') {
@@ -167,6 +166,12 @@ class time_location extends Component {
         var time_raw = new Date(time);
         var hour = time_raw.getHours();
         var minute = time_raw.getMinutes();
+        if (hour.toString().length === 1) {
+            hour = '0' + hour;
+        }
+        if (minute.toString().length === 1) {
+            minute = '0' + minute;
+        }
         return `${hour}:${minute}`
     }
     render() {
@@ -212,7 +217,7 @@ class time_location extends Component {
         return (
             <>
                 <div className="m-[10px] p-[10px] border shadow-md bg-white">
-                    <Button onClick={() => this.openForm("create", true)}
+                    <Button onClick={() => this.openForm("create", true)} disabled
                         type="default" size="middle" className="bg-[#001529] text-white">
                         CREATE
                     </Button>

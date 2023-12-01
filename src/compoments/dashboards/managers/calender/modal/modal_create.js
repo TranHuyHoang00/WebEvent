@@ -134,10 +134,6 @@ class modal_create extends Component {
         }
     }
     handleOnchangeInput = async (event, id) => {
-        if (id == 'user_id') { await this.get_user(event.target.value); }
-        if (id == 'brand_id') { await this.get_brand(event.target.value); }
-        if (id == 'stylist_id') { await this.get_stylist(event.target.value); }
-        if (id == 'makeup_hair_id') { await this.get_makeup_hair(event.target.value); }
         let copyState = { ...this.state.data_schedule };
         copyState[id] = event.target.value;
         this.setState({
@@ -145,6 +141,12 @@ class modal_create extends Component {
                 ...copyState
             }
         });
+        console.log(event.target.value);
+        if (id == 'user_id') { await this.get_user(event.target.value); }
+        if (id == 'brand_id') { await this.get_brand(event.target.value); }
+        if (id == 'stylist_id') { await this.get_stylist(event.target.value); }
+        if (id == 'makeup_hair_id') { await this.get_makeup_hair(event.target.value); }
+
     }
     handleOnchangeChargeOf = (event, id) => {
         let copyState = { ...this.state.data_charge_of };
@@ -303,6 +305,8 @@ class modal_create extends Component {
         let data_stylist = this.state.data_stylist;
         let data_makeup_hairs = this.state.data_makeup_hairs;
         let data_makeup_hair = this.state.data_makeup_hair;
+        let data_schedule = this.state.data_schedule;
+        let data_charge_of = this.state.data_charge_of;
         return (
             <>
                 <Modal title={`CREATE A SCHEDULE FOR DATE: ${this.props.date_select}`} open={this.props.modal_create}
@@ -313,18 +317,19 @@ class modal_create extends Component {
                     <div className="space-y-[15px]">
                         <div className='border px-[10px] pb-[10px] shadow-md rounded-[5px] space-y-[5px]'>
                             <Divider>ARTIST</Divider>
-                            <label>NAME ARTIST</label>
-                            <select onChange={(event) => this.handleOnchangeInput(event, 'user_id')}
+                            <label>NAME</label>
+                            <select
+                                onChange={(event) => this.handleOnchangeInput(event, 'user_id')}
                                 className='w-full border p-[5px] rounded-[5px]'>
-                                <option></option>
+                                <option value={0}></option>
                                 {data_users && data_users.map((item, index) => {
                                     return (
                                         <option value={item.id} key={item.id}>{item.fullname}</option>
                                     )
                                 })}
                             </select>
-                            {data_user.id &&
-                                <div className='flex items-center justify-center'>
+                            {data_user.id && data_schedule.user_id !== '0' &&
+                                <div div className='flex items-center justify-center'>
                                     <Image width={150} height={150}
                                         className=' object-cover rounded-full'
                                         src={(data_user.avatar == "" || data_user.avatar == null) ? require(`../../../../../assets/images/None.jpg`).default : data_user.avatar} />
@@ -334,9 +339,10 @@ class modal_create extends Component {
                         <div className='border px-[10px] pb-[10px] shadow-md rounded-[5px] space-y-[5px]'>
                             <Divider>BRAND</Divider>
                             <label>NAME BRAND</label>
-                            <select onChange={(event) => this.handleOnchangeInput(event, 'brand_id')}
+                            <select
+                                onChange={(event) => this.handleOnchangeInput(event, 'brand_id')}
                                 className='w-full border p-[5px] rounded-[5px]'>
-                                <option></option>
+                                <option value={0}></option>
                                 {data_brands && data_brands.map((item, index) => {
                                     return (
                                         <option value={item.id} key={item.id}>{item.name}</option>
@@ -347,16 +353,17 @@ class modal_create extends Component {
                         <div className='border px-[10px] pb-[10px] shadow-md rounded-[5px] space-y-[5px]'>
                             <Divider>STYLIST</Divider>
                             <label>NAME STYLIST</label>
-                            <select onChange={(event) => this.handleOnchangeInput(event, 'stylist_id')}
+                            <select
+                                onChange={(event) => this.handleOnchangeInput(event, 'stylist_id')}
                                 className='w-full border p-[5px] rounded-[5px]'>
-                                <option></option>
+                                <option value={0}></option>
                                 {data_stylists && data_stylists.map((item, index) => {
                                     return (
                                         <option value={item.id} key={item.id}>{item.name}</option>
                                     )
                                 })}
                             </select>
-                            {data_stylist.id &&
+                            {data_stylist.id && data_schedule.stylist_id !== '0' &&
                                 <div className='flex items-center justify-center'>
                                     <button ><AiOutlineDoubleLeft /></button>
                                     <div className='h-[150px] w-[150px] '>
@@ -378,16 +385,17 @@ class modal_create extends Component {
                         <div className='border px-[10px] pb-[10px] shadow-md rounded-[5px] space-y-[5px]'>
                             <Divider>MAKE UP_HAIR</Divider>
                             <label>NAME MAKE UP_HAIR</label>
-                            <select onChange={(event) => this.handleOnchangeInput(event, 'makeup_hair_id')}
+                            <select
+                                onChange={(event) => this.handleOnchangeInput(event, 'makeup_hair_id')}
                                 className='w-full border p-[5px] rounded-[5px]'>
-                                <option></option>
+                                <option value={0}></option>
                                 {data_makeup_hairs && data_makeup_hairs.map((item, index) => {
                                     return (
                                         <option value={item.id} key={item.id}>{item.make_up}-{item.make_hair}</option>
                                     )
                                 })}
                             </select>
-                            {data_makeup_hair.id &&
+                            {data_makeup_hair.id && data_schedule.makeup_hair_id !== '0' &&
                                 <div className='flex items-center justify-center'>
                                     <button ><AiOutlineDoubleLeft /></button>
                                     <div className='h-[150px] w-[150px] '>
@@ -410,7 +418,8 @@ class modal_create extends Component {
                             <Divider>PERSON IN CHARGE</Divider>
                             <div>
                                 <label>Name<span className="text-red-500"> *</span></label>
-                                <Input placeholder="Cannot be blank"
+                                <Input value={data_charge_of.name}
+                                    placeholder="Cannot be blank"
                                     onChange={(event) => this.handleOnchangeChargeOf(event, "name")} />
                             </div>
                         </div>
@@ -457,7 +466,7 @@ class modal_create extends Component {
                             </div>
                         </div>
                     </div>
-                </Modal>
+                </Modal >
             </>
         );
     }

@@ -75,6 +75,13 @@ class stylist extends Component {
         return value.trim().length
     }
     Validation = (data) => {
+        let data_stylists = this.state.data_stylists;
+        let modal_create = this.state.modal_create;
+        for (const i of data_stylists) {
+            if (i.name == data.name && modal_create == true) {
+                return { mess: "Name already exists ", code: 1 };
+            };
+        }
         if (!data.name) {
             return { mess: "Name cannot be blank", code: 1 };
         }
