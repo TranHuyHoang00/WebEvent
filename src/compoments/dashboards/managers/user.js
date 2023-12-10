@@ -45,7 +45,7 @@ class user extends Component {
                     role.label = i.name;
                     data_new.push(role);
                 }
-                this.setState({ data_roles: data_new })
+                this.setState({ data_roles: data.data.data })
             }
         } catch (e) {
             console.log('Error', e);
@@ -122,6 +122,9 @@ class user extends Component {
     Validation = (data) => {
         let data_users = this.state.data_users;
         let modal_create = this.state.modal_create;
+        if (!data.avatar && this.state.modal_create == true) {
+            return { mess: "Avatar cannot be blank", code: 1 };
+        }
         for (const i of data_users) {
             if (i.username == data.username && modal_create == true) {
                 return { mess: "Username already exists ", code: 1 };
@@ -142,7 +145,7 @@ class user extends Component {
         if (!data.fullname) {
             return { mess: "Fullname cannot be blank", code: 1 };
         }
-        if (!data.role_id && this.state.modal_create == true) {
+        if ((!data.role_id && this.state.modal_create == true) || data.role_id == 0) {
             return { mess: "Role cannot be blank", code: 1 };
         }
         return { code: 0 };
@@ -154,7 +157,7 @@ class user extends Component {
                 let data = await create_user(this.state.data_user);
                 if (data && data.data && data.data.success == 1) {
                     toast.success('Success')
-                    this.setState({ modal_create: false, data_user: {} })
+                    this.setState({ modal_create: false, data_user: { role_id: 0 } })
                     await this.get_list_user();
                 } else {
                     toast.error('Error')
@@ -295,10 +298,21 @@ class user extends Component {
                         </div>
                         <div>
                             <label>Role<span className='text-red-500'> *</span></label><br />
-                            <Select className='w-full'
+                            <select className='border w-full rounded-[5px] p-[5px]'
+                                onChange={(event) => this.handleOnchangeInput(event, 'role_id')}
+                                value={data_user.role_id}>
+                                <option value={'0'}></option>
+                                {data_roles && data_roles.map((item, index) => {
+                                    return (
+                                        <option value={item.id} key={item.id}>{item.name}</option>
+                                    )
+                                })}
+                            </select>
+
+                            {/* <Select className='w-full'
                                 onChange={(event) => this.handleOnChangeRole(event, 'role_id')}
                                 options={data_roles}
-                            />
+                            /> */}
                         </div>
                     </div>
                 </Modal>
@@ -316,15 +330,15 @@ class user extends Component {
                         </div>
                         <div>
                             <label>Username</label>
-                            <Input value={data_user.username} disabled />
+                            <input value={data_user.username} disabled className='border w-full rounded-[5px] p-[5px]' />
                         </div>
                         <div>
                             <label>Fullname</label>
-                            <Input value={data_user.fullname} disabled />
+                            <input value={data_user.fullname} disabled className='border w-full rounded-[5px] p-[5px]' />
                         </div>
                         <div>
                             <label>Role</label><br />
-                            <Input value={data_user.role && data_user.role.name} disabled />
+                            <input value={data_user.role && data_user.role.name} disabled className='border w-full rounded-[5px] p-[5px]' />
                         </div>
                     </div>
                 </Modal>
@@ -336,7 +350,7 @@ class user extends Component {
                     width={300}>
                     <div className='space-y-[10px]'>
                         <div className='flex items-center justify-center'>
-                            <Image width={200} height={200} src={this.state.data_user.avatar}
+                            <Image width={200} height={200} src={data_user.avatar}
                                 className=' object-cover rounded-[5px]' />
                         </div>
                         <div className='text-center'>
@@ -350,8 +364,7 @@ class user extends Component {
                         </div>
                         <div>
                             <label>Username</label>
-                            <Input value={data_user.username} disabled
-                                onChange={(event) => this.handleOnchangeInput(event, 'username')} />
+                            <input value={data_user.username} disabled className='border w-full rounded-[5px] p-[5px]' />
                         </div>
                         <div>
                             <label>Password<span className='text-red-500'> *</span></label>
@@ -365,7 +378,7 @@ class user extends Component {
                         </div>
                         <div>
                             <label>Role</label><br />
-                            <Input value={data_user.role && data_user.role.name} disabled />
+                            <input value={data_user.role && data_user.role.name} disabled className='border w-full rounded-[5px] p-[5px]' />
                         </div>
                     </div>
                 </Modal>

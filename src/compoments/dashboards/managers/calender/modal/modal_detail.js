@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
 import { Image, Divider, Carousel, Modal } from 'antd';
+import moment from 'moment';
+
 class modal_detail extends Component {
     constructor(props) {
         super(props);
@@ -9,6 +11,9 @@ class modal_detail extends Component {
         }
     }
     async componentDidMount() {
+    }
+    format_time = (time) => {
+        return moment(time).format('YYYY-MM-DDTHH:mm');
     }
     render() {
         let data_schedule = this.props.data_schedule;
@@ -130,17 +135,17 @@ class modal_detail extends Component {
                             </div>
                             <div>
                                 <label>Show time</label><br />
-                                <input type='datetime-local' value={data_schedule.time_localtion_id && data_schedule.time_localtion_id.show_time}
+                                <input type='datetime-local' value={this.format_time(data_schedule.time_localtion_id && data_schedule.time_localtion_id.show_time)}
                                     disabled className='border w-full rounded-[5px] p-[5px]' />
                             </div>
                             <div>
                                 <label>Leave time</label><br />
-                                <input type='datetime-local' value={data_schedule.time_localtion_id && data_schedule.time_localtion_id.leave_time}
+                                <input type='datetime-local' value={this.format_time(data_schedule.time_localtion_id && data_schedule.time_localtion_id.leave_time)}
                                     disabled className='border w-full rounded-[5px] p-[5px]' />
                             </div>
                             <div>
                                 <label>Makeup time</label><br />
-                                <input type='datetime-local' value={data_schedule.time_localtion_id && data_schedule.time_localtion_id.make_up_time}
+                                <input type='datetime-local' value={this.format_time(data_schedule.time_localtion_id && data_schedule.time_localtion_id.make_up_time)}
                                     disabled className='border w-full rounded-[5px] p-[5px]' />
                             </div>
                             <div>

@@ -94,7 +94,7 @@ class makeup_hair extends Component {
                 if (data && data.data && data.data.success == 1) {
                     toast.success('Success')
                     await this.get_list_makeup_hair();
-                    this.setState({ data_makeup_hair: {}, modal_create: false, })
+                    this.setState({ data_makeup_hair: {}, modal_create: false, data_images: [] })
 
                 } else {
                     toast.error('Error')
@@ -290,8 +290,8 @@ class makeup_hair extends Component {
                                         {data_images && data_images.map((item, index) => {
                                             return (
                                                 <div key={index} className='flex items-center justify-center'>
-                                                    <div className='text-center'>
-                                                        <Image width={150} height={150} className='object-cover rounded-[5px] '
+                                                    <div className='text-center border'>
+                                                        <Image width={150} height={150} className='object-cover rounded-[5px]'
                                                             src={item.value} />
                                                         <Tooltip title="Delete">
                                                             <button onClick={() => this.handleDeleteImage(index)} className='text-white bg-red-600 px-[5px] h-[20px] rounded-[5px]'><AiFillDelete /></button>
@@ -360,11 +360,11 @@ class makeup_hair extends Component {
                         }
                         <div>
                             <label>Make up<span></span></label>
-                            <Input value={data_makeup_hair.make_up} disabled />
+                            <input value={data_makeup_hair.make_up} disabled className='border w-full rounded-[5px] p-[5px]' />
                         </div>
                         <div>
                             <label>Make hair<span></span></label>
-                            <Input value={data_makeup_hair.make_hair} disabled />
+                            <input value={data_makeup_hair.make_hair} disabled className='border w-full rounded-[5px] p-[5px]' />
                         </div>
                     </div>
                 </Modal>

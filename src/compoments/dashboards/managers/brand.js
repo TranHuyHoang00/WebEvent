@@ -195,7 +195,7 @@ class brand extends Component {
                     <div className="space-y-[10px]">
                         <div>
                             <label>Name<span></span></label>
-                            <Input value={data_brand.name} disabled />
+                            <input value={data_brand.name} disabled className='border w-full rounded-[5px] p-[5px]' />
                         </div>
                     </div>
                 </Modal>

@@ -195,7 +195,8 @@ class role extends Component {
           <div className="space-y-[10px]">
             <div>
               <label>Name<span></span></label>
-              <Input value={data_role.name} disabled />
+              <input value={data_role.name} disabled
+                className='border w-full rounded-[5px] p-[5px]' />
             </div>
           </div>
         </Modal>

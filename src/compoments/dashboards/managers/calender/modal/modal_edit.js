@@ -8,8 +8,9 @@ import { get_list_brand, get_brand } from '../../../../../services/brand_service
 import { get_list_stylist, get_stylist } from '../../../../../services/stylist_services';
 import { get_list_makeup_hair, get_makeup_hair } from '../../../../../services/makeup_hair_services';
 import { get_charge_of, edit_charge_of } from '../../../../../services/charge_of_services';
-import { get_time_location, create_time_location, edit_time_location } from '../../../../../services/time_location_services';
-import { create_schedule, edit_schedule } from '../../../../../services/schedule_services';
+import { get_time_location, edit_time_location } from '../../../../../services/time_location_services';
+import { edit_schedule } from '../../../../../services/schedule_services';
+import moment from 'moment';
 
 class modal_edit extends Component {
     constructor(props) {
@@ -316,6 +317,9 @@ class modal_edit extends Component {
             toast.error(result.mess);
         }
     }
+    format_time = (time) => {
+        return moment(time).format('YYYY-MM-DDTHH:mm');
+    }
     render() {
         let data_users = this.state.data_users;
         let data_user = this.state.data_user;
@@ -452,19 +456,19 @@ class modal_edit extends Component {
                             </div>
                             <div>
                                 <label>Show time<span className="text-red-500"> *</span></label><br />
-                                <input type='datetime-local' value={data_time_location && data_time_location.show_time}
+                                <input type='datetime-local' value={this.format_time(data_time_location && data_time_location.show_time)}
                                     onChange={(event) => this.handleOnchangeTime_Location(event, 'show_time')}
                                     className='border w-full rounded-[5px] p-[5px]' />
                             </div>
                             <div>
                                 <label>Leave time<span className="text-red-500"> *</span></label><br />
-                                <input type='datetime-local' value={data_time_location && data_time_location.leave_time}
+                                <input type='datetime-local' value={this.format_time(data_time_location && data_time_location.leave_time)}
                                     onChange={(event) => this.handleOnchangeTime_Location(event, 'leave_time')}
                                     className='border w-full rounded-[5px] p-[5px]' />
                             </div>
                             <div>
                                 <label>Makeup time<span className="text-red-500"> *</span></label><br />
-                                <input type='datetime-local' value={data_time_location && data_time_location.make_up_time}
+                                <input type='datetime-local' value={this.format_time(data_time_location && data_time_location.make_up_time)}
                                     onChange={(event) => this.handleOnchangeTime_Location(event, 'make_up_time')}
                                     className='border w-full rounded-[5px] p-[5px]' />
                             </div>

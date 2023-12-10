@@ -195,7 +195,7 @@ class charge_of extends Component {
                     <div className="space-y-[10px]">
                         <div>
                             <label>Name<span></span></label>
-                            <Input value={data_charge_of.name} disabled />
+                            <input value={data_charge_of.name} disabled className='border w-full rounded-[5px] p-[5px]' />
                         </div>
                     </div>
                 </Modal>

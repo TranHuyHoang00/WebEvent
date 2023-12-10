@@ -98,7 +98,7 @@ class stylist extends Component {
                 if (data && data.data && data.data.success == 1) {
                     toast.success('Success')
                     await this.get_list_stylist();
-                    this.setState({ modal_create: false, data_stylist: {} })
+                    this.setState({ modal_create: false, data_stylist: {}, data_images: [] })
                 } else {
                     toast.error('Error')
                 }
@@ -354,7 +354,7 @@ class stylist extends Component {
                         }
                         <div>
                             <label>Name<span></span></label>
-                            <Input value={data_stylist.name} disabled />
+                            <input value={data_stylist.name} disabled className='border w-full rounded-[5px] p-[5px]' />
                         </div>
                     </div>
                 </Modal>
