@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from "react-router-dom";
 import { withRouter } from 'react-router-dom';
-import Users from './users/index';
 import Dashboards from './dashboards/index';
 import Page_Not_Found from './pages_error/not_found';
 class index extends Component {
@@ -16,9 +15,8 @@ class index extends Component {
         return (
             <div>
                 <Switch>
-                    {/* <Route path="/home"><Users /></Route>
-                    <Redirect from="/" exact to="/home" /> */}
                     <Route path="/dashboard"><Dashboards /></Route>
+                    <Redirect from="/" exact to="/dashboard" />
                     <Route ><Page_Not_Found /></Route>
                 </Switch>
             </div>

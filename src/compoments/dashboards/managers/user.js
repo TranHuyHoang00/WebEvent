@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Table, Space, Modal, Divider, Button, Input, Popconfirm, Tooltip, Image, Select } from 'antd';
+import { Table, Space, Modal, Divider, Button, Input, Popconfirm, Tooltip, Image, Select, ColorPicker } from 'antd';
 import { AiFillEdit, AiFillDelete, AiFillEye } from "react-icons/ai";
 import { get_list_user, create_user, get_user, delete_user, edit_user } from '../../../services/user_services';
 import { get_list_role } from '../../../services/role_services';
@@ -55,6 +55,7 @@ class user extends Component {
         try {
             let data = await get_user(id);
             if (data && data.data && data.data.success == 1) {
+                console.log(data.data.data);
                 this.setState({ data_user: data.data.data })
             }
         } catch (e) {
@@ -95,7 +96,7 @@ class user extends Component {
         }
     }
     openForm = async (name, value, id) => {
-        if (name == 'create') { this.setState({ modal_create: value }) }
+        if (name == 'create') { this.setState({ modal_create: value, data_user: { color: '#1677FF' } }) }
         if (name == 'detail') {
             if (id == null) {
                 this.setState({ modal_detail: value, data_user: {} });
@@ -178,8 +179,8 @@ class user extends Component {
         if (result.code == 0) {
             try {
                 let data = await edit_user(id, data_user);
-                console.log(data);
                 if (data && data.data && data.data.success == 1) {
+                    console.log(data);
                     toast.success('Success')
                     await this.get_list_user();
                     this.setState({ modal_edit: false, data_user: {} })
@@ -235,6 +236,14 @@ class user extends Component {
                 title: 'ROLE', dataIndex: 'role', responsive: ['md'],
                 render: (role) => <h1>{role && role.name}</h1>,
                 sorter: (a, b) => a.role.name.localeCompare(b.role.name),
+            },
+            {
+                title: 'COLOR', dataIndex: 'color',
+                render: (color) =>
+                    <>
+                        <input type='color' showText
+                            value={color} disabled />
+                    </>
             },
             {
                 title: 'ACTION', width: 120,
@@ -308,11 +317,11 @@ class user extends Component {
                                     )
                                 })}
                             </select>
-
-                            {/* <Select className='w-full'
-                                onChange={(event) => this.handleOnChangeRole(event, 'role_id')}
-                                options={data_roles}
-                            /> */}
+                        </div>
+                        <div>
+                            <label>Characteristic color</label>
+                            <input type='color' value={data_user.color} className='w-full h-[50px]'
+                                onChange={(event) => this.handleOnchangeInput(event, 'color')} />
                         </div>
                     </div>
                 </Modal>
@@ -339,6 +348,11 @@ class user extends Component {
                         <div>
                             <label>Role</label><br />
                             <input value={data_user.role && data_user.role.name} disabled className='border w-full rounded-[5px] p-[5px]' />
+                        </div>
+                        <div>
+                            <label>Characteristic color</label>
+                            <input disabled type='color' value={data_user.color} className='w-full h-[50px]'
+                            />
                         </div>
                     </div>
                 </Modal>
@@ -379,6 +393,11 @@ class user extends Component {
                         <div>
                             <label>Role</label><br />
                             <input value={data_user.role && data_user.role.name} disabled className='border w-full rounded-[5px] p-[5px]' />
+                        </div>
+                        <div>
+                            <label>Characteristic color</label>
+                            <input type='color' value={data_user.color} className='w-full h-[50px]'
+                                onChange={(event) => this.handleOnchangeInput(event, 'color')} />
                         </div>
                     </div>
                 </Modal>

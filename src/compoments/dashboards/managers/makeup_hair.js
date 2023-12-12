@@ -16,7 +16,6 @@ class makeup_hair extends Component {
             id_makeup_hair: '',
             data_images: [],
             is_update: false,
-            is_update_images: false,
         }
     }
     async componentDidMount() {

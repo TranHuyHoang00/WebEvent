@@ -16,7 +16,6 @@ class stylist extends Component {
             id_stylist: '',
             data_images: [],
             is_update: false,
-            is_update_images: false,
         }
     }
     async componentDidMount() {
@@ -75,13 +74,6 @@ class stylist extends Component {
         return value.trim().length
     }
     Validation = (data) => {
-        let data_stylists = this.state.data_stylists;
-        let modal_create = this.state.modal_create;
-        for (const i of data_stylists) {
-            if (i.name == data.name && modal_create == true) {
-                return { mess: "Name already exists ", code: 1 };
-            };
-        }
         if (!data.name) {
             return { mess: "Name cannot be blank", code: 1 };
         }
@@ -192,10 +184,8 @@ class stylist extends Component {
     handleDeleteImageEdit = (index, id) => {
         let data_images = this.state.data_images;
         let data_stylist = this.state.data_stylist;
-
         data_stylist.images.splice(index, 1);
         if (id !== undefined) {
-
             if (data_stylist.delete_images) {
                 data_stylist.delete_images.push(id);
             } else {

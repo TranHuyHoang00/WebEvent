@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
-import { Image, Divider, Carousel, Modal, Input } from 'antd';
+import { AiOutlineDoubleLeft, AiOutlineDoubleRight, AiFillDelete } from "react-icons/ai";
+import { Image, Divider, Carousel, Modal, Input, Tooltip } from 'antd';
 import { get_list_user, get_user } from '../../../../../services/user_services';
-import { get_list_brand, get_brand } from '../../../../../services/brand_services';
-import { get_list_stylist, get_stylist } from '../../../../../services/stylist_services';
-import { get_list_makeup_hair, get_makeup_hair } from '../../../../../services/makeup_hair_services';
+import { get_brand, edit_brand } from '../../../../../services/brand_services';
+import { edit_stylist, get_stylist } from '../../../../../services/stylist_services';
+import { edit_makeup_hair, get_makeup_hair } from '../../../../../services/makeup_hair_services';
 import { get_charge_of, edit_charge_of } from '../../../../../services/charge_of_services';
 import { get_time_location, edit_time_location } from '../../../../../services/time_location_services';
 import { edit_schedule } from '../../../../../services/schedule_services';
@@ -19,11 +19,14 @@ class modal_edit extends Component {
             data_user: {},
             data_users: [],
             data_brand: {},
-            data_brands: [],
             data_stylist: {},
-            data_stylists: [],
+            data_images_stylist: [],
+            is_update_stylist: false,
+
             data_makeup_hair: {},
-            data_makeup_hairs: [],
+            data_images_makeup_hair: [],
+            is_update_makeup_hair: false,
+
             data_charge_of: {},
             data_time_location: {},
 
@@ -37,9 +40,6 @@ class modal_edit extends Component {
             id_schedule: this.props.id_schedule,
         })
         await this.get_list_user();
-        await this.get_list_brand();
-        await this.get_list_stylist();
-        await this.get_list_makeup_hair();
     }
     async componentDidUpdate(prevProps) {
         if (prevProps.data_schedule !== this.props.data_schedule) {
@@ -62,109 +62,6 @@ class modal_edit extends Component {
             })
         }
     }
-    get_list_user = async () => {
-        try {
-            let data = await get_list_user();
-            if (data && data.data && data.data.success == 1) {
-                let data_raw = data.data.data;
-                let data_filter = data_raw.filter(obj => obj.role.name == 'Artist');
-                this.setState({ data_users: data_filter })
-            }
-        } catch (e) {
-            console.log('Error', e);
-        }
-    }
-    get_user = async (id) => {
-        try {
-            let data = await get_user(id);
-            if (data && data.data && data.data.success == 1) {
-                this.setState({ data_user: data.data.data })
-            }
-        } catch (e) {
-            console.log('Error', e);
-        }
-    }
-    get_list_brand = async () => {
-        try {
-            let data = await get_list_brand();
-            if (data && data.data && data.data.success == 1) {
-                this.setState({ data_brands: data.data.data })
-            }
-        } catch (e) {
-            console.log('Error', e);
-        }
-    }
-    get_brand = async (id) => {
-        try {
-            let data = await get_brand(id);
-            if (data && data.data && data.data.success == 1) {
-                this.setState({ data_brand: data.data.data })
-            }
-        } catch (e) {
-            console.log('Error', e);
-        }
-    }
-    get_list_stylist = async () => {
-        try {
-            let data = await get_list_stylist();
-            if (data && data.data && data.data.success == 1) {
-                this.setState({ data_stylists: data.data.data })
-            }
-        } catch (e) {
-            console.log('Error', e);
-        }
-    }
-    get_stylist = async (id) => {
-        try {
-            let data = await get_stylist(id);
-            if (data && data.data && data.data.success == 1) {
-                this.setState({ data_stylist: data.data.data })
-            }
-        } catch (e) {
-            console.log('Error', e);
-        }
-    }
-    get_list_makeup_hair = async () => {
-        try {
-            let data = await get_list_makeup_hair();
-            if (data && data.data && data.data.success == 1) {
-                this.setState({ data_makeup_hairs: data.data.data })
-            }
-        } catch (e) {
-            console.log('Error', e);
-        }
-    }
-    get_makeup_hair = async (id) => {
-        try {
-            let data = await get_makeup_hair(id);
-            if (data && data.data && data.data.success == 1) {
-                this.setState({ data_makeup_hair: data.data.data })
-            }
-        } catch (e) {
-            console.log('Error', e);
-        }
-    }
-    get_charge_of = async (id) => {
-        try {
-            let data = await get_charge_of(id);
-            if (data && data.data && data.data.success == 1) {
-                this.setState({ data_charge_of: data.data.data })
-            }
-        } catch (e) {
-            console.log('Error', e);
-        }
-    }
-    get_time_location = async (id) => {
-        try {
-            let data = await get_time_location(id);
-            if (data && data.data && data.data.success == 1) {
-                this.setState({ data_time_location: data.data.data })
-            }
-        } catch (e) {
-            console.log('Error', e);
-        }
-    }
-
     handleOnchangeInput = async (event, id) => {
         let copyState = { ...this.state.data_schedule };
         copyState[id] = event.target.value;
@@ -180,45 +77,38 @@ class modal_edit extends Component {
 
         console.log(this.state.data_schedule);
     }
-    handleOnchangeChargeOf = (event, id) => {
-        let copyState = { ...this.state.data_charge_of };
-        copyState[id] = event.target.value;
-        this.setState({
-            data_charge_of: {
-                ...copyState
-            }
-        });
-    }
-    handleOnchangeTime_Location = (event, id) => {
-        let copyState = { ...this.state.data_time_location };
-        copyState[id] = event.target.value;
-        this.setState({
-            data_time_location: {
-                ...copyState
-            }
-        });
-    }
     validatephone_numberNumber = (phone_number) => {
         const re = /^(?:\+84|0)(?:3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])(?:\d{7}|\d{7})$/;
         return re.test(phone_number);
     }
-
     Validation = (data) => {
         if (!data.user_id) {
             return { mess: "Please select Artist", code: 1 };
         }
-        if (!data.brand_id) {
-            return { mess: "Please select Brand", code: 1 };
+        let data_brand = this.state.data_brand;
+        if (!data_brand.name) {
+            return { mess: "Name of brand cannot be blank", code: 1 };
         }
-        if (!data.stylist_id) {
-            return { mess: "Please select Stylist", code: 1 };
+        let data_stylist = this.state.data_stylist;
+        if (!data_stylist.name) {
+            return { mess: "Name of stylist cannot be blank", code: 1 };
         }
-        if (!data.makeup_hair_id) {
-            return { mess: "Please select Makeup_hair", code: 1 };
+        let data_makeup_hair = this.state.data_makeup_hair;
+        if (!data_makeup_hair.make_up) {
+            return { mess: "Make up  cannot be blank", code: 1 };
+        }
+        if (!data_makeup_hair.make_hair) {
+            return { mess: "Make hair cannot be blank", code: 1 };
         }
         let data_charge_of = this.state.data_charge_of;
         if (!data_charge_of.name) {
             return { mess: "Name of Person in charge cannot be blank ", code: 1 };
+        }
+        if (!data_charge_of.phone) {
+            return { mess: "Phone of Person in charge cannot be blank ", code: 1 };
+        }
+        if (!this.validatephone_numberNumber(data_charge_of.phone)) {
+            return { mess: "Phone of Person in charge wrong format", code: 1 };
         }
         let data_time_location = this.state.data_time_location;
         let show_time = new Date(data_time_location.show_time);
@@ -256,6 +146,274 @@ class modal_edit extends Component {
         }
         return { code: 0 };
     }
+    handleEdit = async () => {
+        let data_schedule = this.state.data_schedule;
+        let result = this.Validation(data_schedule);
+        if (result.code == 0) {
+            let result_brand = await this.editBrand(data_schedule.brand_id);
+            if (result_brand == 1) { toast.error('Error Brand'); return; }
+            let result_stylist = await this.editStylist(data_schedule.stylist_id);
+            if (result_stylist == 1) { toast.error('Error Stylist'); return; }
+            let result_makeup_hair = await this.editMakeup_hair(data_schedule.makeup_hair_id);
+            if (result_makeup_hair == 1) { toast.error('Error Makeup hair'); return; }
+            let result_charge_of = await this.editCharge_of(data_schedule.charge_of_id);
+            if (result_charge_of == 1) { toast.error('Error Person in charge'); return; }
+            let result_time_location = await this.editTime_location(data_schedule.time_localtion_id);
+            if (result_time_location == 1) { toast.error('Error Time location'); return; }
+            try {
+                let data = await edit_schedule(this.state.id_schedule, this.state.data_schedule);
+                if (data && data.data && data.data.success == 1) {
+                    let type_filter = this.props.type_filter;
+                    await this.props.get_list_schedule(type_filter);
+
+                    let type_filter1 = type_filter;
+                    type_filter1.type_date = 1;
+                    await this.props.get_list_schedule(type_filter1);
+
+                    toast.success('Success');
+                    this.props.openForm("edit", false)
+                } else {
+                    toast.error('Error')
+                }
+            } catch (e) {
+                toast.error('System Error');
+            }
+        } else {
+            toast.error(result.mess);
+        }
+    }
+    format_time = (time) => {
+        return moment(time).format('YYYY-MM-DDTHH:mm');
+    }
+    // User
+    get_list_user = async () => {
+        try {
+            let data = await get_list_user();
+            if (data && data.data && data.data.success == 1) {
+                let data_raw = data.data.data;
+                let data_filter = data_raw.filter(obj => obj.role.name == 'Artist');
+                this.setState({ data_users: data_filter })
+            }
+        } catch (e) {
+            console.log('Error', e);
+        }
+    }
+    get_user = async (id) => {
+        try {
+            let data = await get_user(id);
+            if (data && data.data && data.data.success == 1) {
+                this.setState({ data_user: data.data.data })
+            }
+        } catch (e) {
+            console.log('Error', e);
+        }
+    }
+    // Brand
+    handleOnchangeBrand = (event, id) => {
+        let copyState = { ...this.state.data_brand };
+        copyState[id] = event.target.value;
+        this.setState({
+            data_brand: {
+                ...copyState
+            }
+        });
+    }
+    get_brand = async (id) => {
+        try {
+            let data = await get_brand(id);
+            if (data && data.data && data.data.success == 1) {
+                this.setState({ data_brand: data.data.data })
+            }
+        } catch (e) {
+            console.log('Error', e);
+        }
+    }
+    editBrand = async (id) => {
+        try {
+            let data = await edit_brand(id, this.state.data_brand);
+            if (data && data.data && data.data.success == 1) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } catch (e) {
+            return 1;
+        }
+    }
+    // Stylist
+    get_stylist = async (id) => {
+        try {
+            let data = await get_stylist(id);
+            if (data && data.data && data.data.success == 1) {
+                this.setState({ data_stylist: data.data.data })
+            }
+        } catch (e) {
+            console.log('Error', e);
+        }
+    }
+    handleOnchangeInput_Stylist = (event, id) => {
+        let copyState = { ...this.state.data_stylist };
+        copyState[id] = event.target.value;
+        this.setState({
+            is_update_stylist: true,
+            data_stylist: {
+                ...copyState
+            }
+        });
+    }
+    onChangeImageEdit_stylist = (image) => {
+        const file = image.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                let data_images_stylist = this.state.data_images_stylist;
+                let data_stylist = this.state.data_stylist;
+                let obj = { value: reader.result }
+                data_images_stylist.push(obj);
+                data_stylist.images.push(obj);
+                this.setState({
+                    is_update_stylist: true,
+                    data_stylist: data_stylist,
+                    data_images_stylist: data_images_stylist
+                })
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    handleDeleteImageEdit_stylist = (index, id) => {
+        let data_images_stylist = this.state.data_images_stylist;
+        let data_stylist = this.state.data_stylist;
+        data_stylist.images.splice(index, 1);
+        if (id !== undefined) {
+            if (data_stylist.delete_images) {
+                data_stylist.delete_images.push(id);
+            } else {
+                data_stylist.delete_images = [id]
+            }
+        } else {
+            let objectsWithoutId = data_stylist.images.filter(obj => obj.id);
+            let countWithoutId = objectsWithoutId.length;
+            data_images_stylist.splice(index - countWithoutId, 1);
+        }
+        this.setState({
+            is_update_stylist: true,
+            data_images_stylist: data_images_stylist,
+            data_stylist: data_stylist
+        })
+    }
+    editStylist = async (id) => {
+        let data_stylist = this.state.data_stylist;
+        let data_images_stylist = this.state.data_images_stylist;
+        if (this.state.is_update_stylist == false) {
+            return 0;
+        } else {
+            data_stylist.images = data_images_stylist;
+            try {
+                let data = await edit_stylist(id, this.state.data_stylist);
+                if (data && data.data && data.data.success == 1) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            } catch (e) {
+                return 1;
+            }
+        }
+
+    }
+    // Makeup_hair
+    get_makeup_hair = async (id) => {
+        try {
+            let data = await get_makeup_hair(id);
+            if (data && data.data && data.data.success == 1) {
+                this.setState({ data_makeup_hair: data.data.data })
+            }
+        } catch (e) {
+            console.log('Error', e);
+        }
+    }
+    handleOnchangeInput_Makeup = (event, id) => {
+        let copyState = { ...this.state.data_makeup_hair };
+        copyState[id] = event.target.value;
+        this.setState({
+            is_update_makeup_hair: true,
+            data_makeup_hair: {
+                ...copyState
+            }
+        });
+    }
+    onChangeImageEdit_makeup_hair = (image) => {
+        const file = image.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                let data_images_makeup_hair = this.state.data_images_makeup_hair;
+                let data_makeup_hair = this.state.data_makeup_hair;
+                let obj = { value: reader.result }
+                data_images_makeup_hair.push(obj);
+                data_makeup_hair.images.push(obj);
+                this.setState({
+                    is_update_makeup_hair: true,
+                    data_makeup_hair: data_makeup_hair,
+                    data_images_makeup_hair: data_images_makeup_hair
+                })
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    handleDeleteImageEdit_makeup_hair = (index, id) => {
+        let data_images_makeup_hair = this.state.data_images_makeup_hair;
+        let data_makeup_hair = this.state.data_makeup_hair;
+
+        data_makeup_hair.images.splice(index, 1);
+        if (id !== undefined) {
+
+            if (data_makeup_hair.delete_images) {
+                data_makeup_hair.delete_images.push(id);
+            } else {
+                data_makeup_hair.delete_images = [id]
+            }
+        } else {
+            let objectsWithoutId = data_makeup_hair.images.filter(obj => obj.id);
+            let countWithoutId = objectsWithoutId.length;
+            data_images_makeup_hair.splice(index - countWithoutId, 1);
+        }
+        this.setState({
+            is_update_makeup_hair: true,
+            data_images_makeup_hair: data_images_makeup_hair,
+            data_makeup_hair: data_makeup_hair
+        })
+    }
+    editMakeup_hair = async (id) => {
+        let data_makeup_hair = this.state.data_makeup_hair;
+        let data_images_makeup_hair = this.state.data_images_makeup_hair;
+        if (this.state.is_update_makeup_hair == false) {
+            return 0;
+        } else {
+            data_makeup_hair.images = data_images_makeup_hair;
+            try {
+                let data = await edit_makeup_hair(id, this.state.data_makeup_hair);
+                if (data && data.data && data.data.success == 1) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            } catch (e) {
+                return 1;
+            }
+        }
+
+    }
+    // Charge_of
+    handleOnchangeChargeOf = (event, id) => {
+        let copyState = { ...this.state.data_charge_of };
+        copyState[id] = event.target.value;
+        this.setState({
+            data_charge_of: {
+                ...copyState
+            }
+        });
+    }
     editCharge_of = async (id) => {
         try {
             let data = await edit_charge_of(id, this.state.data_charge_of);
@@ -268,6 +426,17 @@ class modal_edit extends Component {
             return 1;
         }
     }
+    get_charge_of = async (id) => {
+        try {
+            let data = await get_charge_of(id);
+            if (data && data.data && data.data.success == 1) {
+                this.setState({ data_charge_of: data.data.data })
+            }
+        } catch (e) {
+            console.log('Error', e);
+        }
+    }
+    // Time_location
     editTime_location = async (id) => {
         try {
             let data = await edit_time_location(id, this.state.data_time_location);
@@ -280,53 +449,30 @@ class modal_edit extends Component {
             return 1;
         }
     }
-    handleEdit = async () => {
-        let data_schedule = this.state.data_schedule;
-        let result = this.Validation(data_schedule);
-        if (result.code == 0) {
-            try {
-                let charge_of = await this.editCharge_of(data_schedule.charge_of_id);
-                if (charge_of == 0) {
-                    let time_location = await this.editTime_location(data_schedule.time_localtion_id);
-                    if (time_location == 0) {
-                        let data = await edit_schedule(this.state.id_schedule, this.state.data_schedule);
-                        console.log(data);
-                        if (data && data.data && data.data.success == 1) {
-                            let type_filter = this.props.type_filter;
-                            await this.props.get_list_schedule(type_filter);
-
-                            let type_filter1 = type_filter;
-                            type_filter1.type_date = 1;
-                            await this.props.get_list_schedule(type_filter1);
-
-                            toast.success('Success');
-                            this.props.openForm("edit", false)
-                        } else {
-                            toast.error('Error')
-                        }
-                    } else {
-                        toast.error('Error Time location')
-                    }
-                } else {
-                    toast.error('Person in charge already exists')
-                }
-            } catch (e) {
-                toast.error('System Error');
+    handleOnchangeTime_Location = (event, id) => {
+        let copyState = { ...this.state.data_time_location };
+        copyState[id] = event.target.value;
+        this.setState({
+            data_time_location: {
+                ...copyState
             }
-        } else {
-            toast.error(result.mess);
-        }
+        });
     }
-    format_time = (time) => {
-        return moment(time).format('YYYY-MM-DDTHH:mm');
+    get_time_location = async (id) => {
+        try {
+            let data = await get_time_location(id);
+            if (data && data.data && data.data.success == 1) {
+                this.setState({ data_time_location: data.data.data })
+            }
+        } catch (e) {
+            console.log('Error', e);
+        }
     }
     render() {
         let data_users = this.state.data_users;
         let data_user = this.state.data_user;
-        let data_brands = this.state.data_brands;
-        let data_stylists = this.state.data_stylists;
+        let data_brand = this.state.data_brand;
         let data_stylist = this.state.data_stylist;
-        let data_makeup_hairs = this.state.data_makeup_hairs;
         let data_makeup_hair = this.state.data_makeup_hair;
         let data_charge_of = this.state.data_charge_of;
         let data_time_location = this.state.data_time_location;
@@ -363,40 +509,30 @@ class modal_edit extends Component {
                         <div className='border px-[10px] pb-[10px] shadow-md rounded-[5px] space-y-[5px]'>
                             <Divider>BRAND</Divider>
                             <label>NAME BRAND</label>
-                            <select value={data_schedule.brand_id}
-                                onChange={(event) => this.handleOnchangeInput(event, 'brand_id')}
-                                className='w-full border p-[5px] rounded-[5px]'>
-                                <option></option>
-                                {data_brands && data_brands.map((item, index) => {
-                                    return (
-                                        <option value={item.id} key={item.id}>{item.name}</option>
-                                    )
-                                })}
-                            </select>
+                            <div>
+                                <label>Name<span className="text-red-500"> *</span></label>
+                                <Input value={data_brand.name}
+                                    onChange={(event) => this.handleOnchangeBrand(event, "name")} />
+                            </div>
                         </div>
                         <div className='border px-[10px] pb-[10px] shadow-md rounded-[5px] space-y-[5px]'>
                             <Divider>STYLIST</Divider>
-                            <label>NAME STYLIST</label>
-                            <select value={data_schedule.stylist_id}
-                                onChange={(event) => this.handleOnchangeInput(event, 'stylist_id')}
-                                className='w-full border p-[5px] rounded-[5px]'>
-                                <option></option>
-                                {data_stylists && data_stylists.map((item, index) => {
-                                    return (
-                                        <option value={item.id} key={item.id}>{item.name}</option>
-                                    )
-                                })}
-                            </select>
-                            {data_stylist.id &&
+                            <div className='space-y-[5px]'>
+                                <label>Image</label>
                                 <div className='flex items-center justify-center'>
                                     <button ><AiOutlineDoubleLeft /></button>
-                                    <div className='h-[150px] w-[150px] '>
-                                        <Carousel arrows autoplay >
+                                    <div className='h-[170px] w-[150px] '>
+                                        <Carousel arrows autoplay dotPosition='top'>
                                             {data_stylist && data_stylist.images && data_stylist.images.map((item, index) => {
                                                 return (
-                                                    <div key={item.id} className='flex items-center justify-center'>
-                                                        <Image width={150} height={150} className='object-cover rounded-[5px] '
-                                                            src={item.value} />
+                                                    <div key={index} className='flex items-center justify-center'>
+                                                        <div className='text-center'>
+                                                            <Image width={150} height={150} className='object-cover rounded-[5px] '
+                                                                src={item.value} />
+                                                            <Tooltip title="Delete">
+                                                                <button onClick={() => this.handleDeleteImageEdit_stylist(index, item.id)} className='text-white bg-red-600 px-[5px] h-[20px] rounded-[5px]'><AiFillDelete /></button>
+                                                            </Tooltip>
+                                                        </div>
                                                     </div>
                                                 )
                                             })}
@@ -404,31 +540,40 @@ class modal_edit extends Component {
                                     </div>
                                     <button ><AiOutlineDoubleRight /></button>
                                 </div>
-                            }
+                            </div>
+                            <div className='text-center pt-[10px]'>
+                                <input id="load_file" type="file" accept="image/*" hidden
+                                    onChange={(image) => this.onChangeImageEdit_stylist(image)}
+                                />
+                                <label htmlFor="load_file"
+                                    className=' border rounded-[5px] px-[10px] py-[3px] cursor-pointer shadow-md'>
+                                    Add image
+                                </label>
+                            </div>
+                            <div>
+                                <label>Name<span className="text-red-500"> *</span></label>
+                                <Input value={data_stylist.name}
+                                    onChange={(event) => this.handleOnchangeInput_Stylist(event, "name")} />
+                            </div>
                         </div>
                         <div className='border px-[10px] pb-[10px] shadow-md rounded-[5px] space-y-[5px]'>
                             <Divider>MAKE UP_HAIR</Divider>
-                            <label>NAME MAKE UP_HAIR</label>
-                            <select value={data_schedule.makeup_hair_id}
-                                onChange={(event) => this.handleOnchangeInput(event, 'makeup_hair_id')}
-                                className='w-full border p-[5px] rounded-[5px]'>
-                                <option></option>
-                                {data_makeup_hairs && data_makeup_hairs.map((item, index) => {
-                                    return (
-                                        <option value={item.id} key={item.id}>{item.make_up}-{item.make_hair}</option>
-                                    )
-                                })}
-                            </select>
-                            {data_makeup_hair.id &&
+                            <div className='space-y-[5px]'>
+                                <label>Image</label>
                                 <div className='flex items-center justify-center'>
                                     <button ><AiOutlineDoubleLeft /></button>
-                                    <div className='h-[150px] w-[150px] '>
-                                        <Carousel arrows autoplay >
+                                    <div className='h-[170px] w-[150px] '>
+                                        <Carousel arrows autoplay dotPosition='top'>
                                             {data_makeup_hair && data_makeup_hair.images && data_makeup_hair.images.map((item, index) => {
                                                 return (
-                                                    <div key={item.id} className='flex items-center justify-center'>
-                                                        <Image width={150} height={150} className='object-cover rounded-[5px] '
-                                                            src={item.value} />
+                                                    <div key={index} className='flex items-center justify-center'>
+                                                        <div className='text-center'>
+                                                            <Image width={150} height={150} className='object-cover rounded-[5px] '
+                                                                src={item.value} />
+                                                            <Tooltip title="Delete">
+                                                                <button onClick={() => this.handleDeleteImageEdit_makeup_hair(index, item.id)} className='text-white bg-red-600 px-[5px] h-[20px] rounded-[5px]'><AiFillDelete /></button>
+                                                            </Tooltip>
+                                                        </div>
                                                     </div>
                                                 )
                                             })}
@@ -436,7 +581,26 @@ class modal_edit extends Component {
                                     </div>
                                     <button ><AiOutlineDoubleRight /></button>
                                 </div>
-                            }
+                            </div>
+                            <div className='text-center pt-[10px]'>
+                                <input id="load_file1" type="file" accept="image/*" hidden
+                                    onChange={(image) => this.onChangeImageEdit_makeup_hair(image)}
+                                />
+                                <label htmlFor="load_file1"
+                                    className=' border rounded-[5px] px-[10px] py-[3px] cursor-pointer shadow-md'>
+                                    Add image
+                                </label>
+                            </div>
+                            <div>
+                                <label>MAKE UP<span className="text-red-500"> *</span></label>
+                                <Input value={data_makeup_hair.make_up}
+                                    onChange={(event) => this.handleOnchangeInput_Makeup(event, "make_up")} />
+                            </div>
+                            <div>
+                                <label>MAKE HAIR<span className="text-red-500"> *</span></label>
+                                <Input value={data_makeup_hair.make_hair}
+                                    onChange={(event) => this.handleOnchangeInput_Makeup(event, "make_hair")} />
+                            </div>
                         </div>
                         <div className='border px-[10px] pb-[10px] shadow-md rounded-[5px] space-y-[5px]'>
                             <Divider>PERSON IN CHARGE</Divider>
@@ -444,6 +608,11 @@ class modal_edit extends Component {
                                 <label>Name<span className="text-red-500"> *</span></label>
                                 <Input placeholder="Cannot be blank" value={data_charge_of && data_charge_of.name}
                                     onChange={(event) => this.handleOnchangeChargeOf(event, "name")} />
+                            </div>
+                            <div>
+                                <label>Phone<span className="text-red-500"> *</span></label>
+                                <Input placeholder="Cannot be blank" value={data_charge_of && data_charge_of.phone}
+                                    onChange={(event) => this.handleOnchangeChargeOf(event, "phone")} />
                             </div>
                         </div>
                         <div className='border px-[10px] pb-[10px] shadow-md rounded-[5px] space-y-[5px]'>

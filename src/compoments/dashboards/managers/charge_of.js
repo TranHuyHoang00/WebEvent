@@ -70,18 +70,19 @@ class charge_of extends Component {
     isCheckEmpty = (value) => {
         return value.trim().length
     }
+    validatephone_numberNumber = (phone_number) => {
+        const re = /^(?:\+84|0)(?:3[2-9]|5[2689]|7[06-9]|8[1-9]|9[0-46-9])(?:\d{7}|\d{7})$/;
+        return re.test(phone_number);
+    }
     Validation = (data) => {
-        let data_charge_ofs = this.state.data_charge_ofs;
-        for (const i of data_charge_ofs) {
-            if (i.name == data.name && i.id !== data.id && this.state.modal_edit == true) {
-                return { mess: "Name already exists ", code: 1 };
-            };
-            if (i.name == data.name && this.state.modal_create == true) {
-                return { mess: "Name already exists ", code: 1 };
-            };
-        }
         if (!data.name) {
             return { mess: "Name cannot be blank", code: 1 };
+        }
+        if (!data.phone) {
+            return { mess: "Contact  time cannot be blank", code: 1 };
+        }
+        if (!this.validatephone_numberNumber(data.phone)) {
+            return { mess: "Phone wrong format", code: 1 };
         }
         return { code: 0 };
     }
@@ -148,6 +149,10 @@ class charge_of extends Component {
                 sorter: (a, b) => a.name.localeCompare(b.name),
             },
             {
+                title: 'PHONE', dataIndex: 'phone',
+                sorter: (a, b) => a.phone.localeCompare(b.phone),
+            },
+            {
                 title: 'ACTION', width: 120,
                 render: (_, item) => (
                     <Space size="middle" >
@@ -184,6 +189,11 @@ class charge_of extends Component {
                             <Input value={data_charge_of.name} placeholder="Cannot be blank"
                                 onChange={(event) => this.handleOnchangeInput(event, "name")} />
                         </div>
+                        <div>
+                            <label>Phone<span className="text-red-500"> *</span></label><br />
+                            <Input placeholder='Cannot be blank' value={data_charge_of.phone}
+                                onChange={(event) => this.handleOnchangeInput(event, 'phone')} />
+                        </div>
                     </div>
                 </Modal>
 
@@ -196,6 +206,10 @@ class charge_of extends Component {
                         <div>
                             <label>Name<span></span></label>
                             <input value={data_charge_of.name} disabled className='border w-full rounded-[5px] p-[5px]' />
+                        </div>
+                        <div>
+                            <label>Phone<span></span></label>
+                            <input value={data_charge_of.phone} disabled className='border w-full rounded-[5px] p-[5px]' />
                         </div>
                     </div>
                 </Modal>
@@ -210,6 +224,11 @@ class charge_of extends Component {
                             <label>Name<span className="text-red-500"> *</span></label>
                             <Input value={data_charge_of.name}
                                 onChange={(event) => this.handleOnchangeInput(event, "name")} />
+                        </div>
+                        <div>
+                            <label>Phone<span className="text-red-500"> *</span></label><br />
+                            <Input placeholder='Cannot be blank' value={data_charge_of.phone}
+                                onChange={(event) => this.handleOnchangeInput(event, 'phone')} />
                         </div>
                     </div>
                 </Modal>

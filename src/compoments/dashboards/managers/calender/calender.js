@@ -174,18 +174,18 @@ class calender extends Component {
                             {
                                 (this.format_date(new Date(item.time_localtion_id.show_date))) > this.format_date(DateNow) ?
                                     (
-                                        <Tag className="bg-yellow-500 text-black hidden lg:block" severity="success" >
+                                        <Tag className="bg-yellow-500 text-white hidden lg:block" severity="success" >
                                             {item.user_id && item.user_id.fullname}
                                         </Tag>
                                     ) :
                                     (this.format_date(new Date(item.time_localtion_id.show_date))) < this.format_date(DateNow) ?
                                         (
-                                            <Tag className="bg-red-500 text-black hidden lg:block" severity="danger" >
+                                            <Tag className="bg-red-500 text-white hidden lg:block" severity="danger" >
                                                 {item.user_id && item.user_id.fullname}
                                             </Tag>
                                         ) :
                                         (
-                                            <Tag className="bg-green-500 text-black hidden lg:block" severity="success" >
+                                            <Tag className="bg-green-500 text-white hidden lg:block" severity="success" >
                                                 {item.user_id && item.user_id.fullname}
                                             </Tag>
                                         )
@@ -210,18 +210,18 @@ class calender extends Component {
                                 {
                                     (this.format_date(new Date(item.time_localtion_id.show_date))) > this.format_date(DateNow) ?
                                         (
-                                            <Tag className="bg-yellow-500 text-black hidden lg:block" severity="success" >
+                                            <Tag className="bg-yellow-500 text-white hidden lg:block" severity="success" >
                                                 {item.user_id && item.user_id.fullname}
                                             </Tag>
                                         ) :
                                         (this.format_date(new Date(item.time_localtion_id.show_date))) < this.format_date(DateNow) ?
                                             (
-                                                <Tag className="bg-red-500 text-black hidden lg:block" severity="danger" >
+                                                <Tag className="bg-red-500 text-white hidden lg:block" severity="danger" >
                                                     {item.user_id && item.user_id.fullname}
                                                 </Tag>
                                             ) :
                                             (
-                                                <Tag className="bg-green-500 text-black hidden lg:block" severity="success" >
+                                                <Tag className="bg-green-500 text-white hidden lg:block" severity="success" >
                                                     {item.user_id && item.user_id.fullname}
                                                 </Tag>
                                             )

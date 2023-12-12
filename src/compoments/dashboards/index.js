@@ -4,7 +4,7 @@ import { DatabaseOutlined, } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import {
     AiFillGitlab, AiOutlineUser, AiOutlineQq, AiTwotoneSkin, AiFillAppstore, AiFillGithub, AiFillIdcard,
-    AiFillGold, AiOutlineFieldTime, AiFillCarryOut, AiOutlineContainer
+    AiFillGold, AiOutlineFieldTime, AiFillUsb, AiOutlineContainer
 } from "react-icons/ai";
 import { withRouter } from 'react-router-dom';
 import { get_local_account } from '../../auths/local_storage';
@@ -17,7 +17,7 @@ import ManagerMakeup_hair from './managers/makeup_hair';
 import ManagerRole from './managers/role';
 import ManagerTime_location from './managers/time_locaiton';
 import ManagerCalender from './managers/calender/calender';
-
+import ManagerDevice from './managers/device';
 import Login_DB from './pages/login';
 import Not_logged from './pages_error/not_logged';
 import Not_found from './pages_error/not_found';
@@ -66,6 +66,7 @@ class index extends Component {
                     this.getItem('Brand', 'brand', <AiFillIdcard />),
                     this.getItem('User', 'user', <AiOutlineUser />),
                     this.getItem('Role', 'role', <AiFillGold />),
+                    this.getItem('Device', 'device', <AiFillUsb />),
                 ]
             ),
         ];
@@ -81,6 +82,7 @@ class index extends Component {
                         this.getItem('Brand', 'brand', <AiFillIdcard />),
                         this.getItem('User', 'user', <AiFillGithub />),
                         this.getItem('Role', 'role', <AiFillGold />),
+                        this.getItem('Device', 'device', <AiFillUsb />),
                     ],
                     'group'
                 ),
@@ -120,7 +122,7 @@ class index extends Component {
                                     <Route exact path={`${url}makeup_hair`}><ManagerMakeup_hair /></Route>
                                     <Route exact path={`${url}role`}><ManagerRole /></Route>
                                     <Route exact path={`${url}time_location`}><ManagerTime_location /></Route>
-
+                                    <Route exact path={`${url}device`}><ManagerDevice /></Route>
                                     <Route exact path={`${url}login`}><Empty /></Route>
                                     <Route ><Empty /></Route>
                                 </Switch>
