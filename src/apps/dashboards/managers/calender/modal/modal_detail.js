@@ -125,6 +125,19 @@ class modal_detail extends Component {
                                 <input value={data_schedule.charge_of_id && data_schedule.charge_of_id.name} disabled
                                     className='border w-full rounded-[5px] p-[5px]' />
                             </div>
+                            <div>
+                                <label>Phone<span></span></label><br />
+                                <input value={data_schedule.charge_of_id && data_schedule.charge_of_id.phone} disabled
+                                    className='border w-full rounded-[5px] p-[5px]' />
+                            </div>
+                        </div>
+                        <div className='border px-[10px] pb-[10px] shadow-md rounded-[5px] space-y-[5px]'>
+                            <Divider>Note</Divider>
+                            <div>
+                                <label>Content<span></span></label><br />
+                                <textarea value={data_schedule.charge_of_id && data_schedule.charge_of_id.note} disabled
+                                    className='border w-full rounded-[5px] p-[5px]' />
+                            </div>
                         </div>
                         <div className='border px-[10px] pb-[10px] shadow-md rounded-[5px] space-y-[5px]'>
                             <Divider>TIME_LOCATION</Divider>

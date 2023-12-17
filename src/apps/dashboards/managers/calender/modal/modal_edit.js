@@ -604,6 +604,15 @@ class modal_edit extends Component {
                             </div>
                         </div>
                         <div className='border px-[10px] pb-[10px] shadow-md rounded-[5px] space-y-[5px]'>
+                            <Divider>NOTE</Divider>
+                            <div>
+                                <label>Content<span className="text-red-500"> *</span></label>
+                                <Input.TextArea value={data_charge_of && data_charge_of.note}
+                                    onChange={(event) => this.handleOnchangeChargeOf(event, "note")}
+                                    rows={4} />
+                            </div>
+                        </div>
+                        <div className='border px-[10px] pb-[10px] shadow-md rounded-[5px] space-y-[5px]'>
                             <Divider>TIME_LOCATION</Divider>
                             <div>
                                 <label>Show date<span className="text-red-500"> *</span></label><br />

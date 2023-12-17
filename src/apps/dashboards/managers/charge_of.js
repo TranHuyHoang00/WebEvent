@@ -22,6 +22,7 @@ class charge_of extends Component {
     get_list_charge_of = async () => {
         try {
             let data = await get_list_charge_of();
+            console.log(data);
             if (data && data.data && data.data.success == 1) {
                 this.setState({ data_charge_ofs: data.data.data })
             }
