@@ -17,7 +17,7 @@ class header extends Component {
         }
     }
     onClickLogout = () => {
-        this.props.handleLogout_DB();
+        this.props.handle_Logout_DB();
         remove_local_account(process.env.REACT_APP_LOCALHOST_ACOUNT_DB);
         this.props.history.push(`/dashboard/login`);
     }
@@ -33,7 +33,7 @@ class header extends Component {
         return (
             <div className='flex items-center justify-between w-full h-full bg-white'>
                 <Space >
-                    <MenuOutlined className='md:hidden block text-[20px]' onClick={() => this.props.openDrawerForm()} />
+                    <MenuOutlined className='md:hidden block text-[20px]' onClick={() => this.props.open_DrawerForm()} />
                     <Space >
                         <h1 className=' text-[22px] font-[500] '>ADMIN</h1>
                     </Space>

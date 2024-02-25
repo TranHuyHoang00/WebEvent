@@ -4,20 +4,21 @@ import { DatabaseOutlined, } from '@ant-design/icons';
 import { Layout, Menu, Drawer } from 'antd';
 import {
     AiFillGitlab, AiOutlineUser, AiOutlineQq, AiTwotoneSkin, AiFillIdcard,
-    AiFillGold, AiOutlineFieldTime, AiFillUsb, AiOutlineContainer
+    AiFillGold, AiOutlineFieldTime, AiFillUsb, AiOutlineContainer, AiFillBook
 } from "react-icons/ai";
 import { withRouter } from 'react-router-dom';
 import { get_local_account } from '../../auths/local_storage';
 import HeaderDB from './layouts/header';
-import ManagerUser from './managers/user';
-import ManagerBrand from './managers/brand';
-import ManagerStylist from './managers/stylist';
-import ManagerChargeOf from './managers/charge_of';
-import ManagerMakeup_hair from './managers/makeup_hair';
-import ManagerRole from './managers/role';
-import ManagerTime_location from './managers/time_locaiton';
-import ManagerCalender from './managers/calender/calender';
-import ManagerDevice from './managers/device';
+import ManagerUser from './managers/user/index';
+import ManagerBrand from './managers/brand/index';
+import ManagerStylist from './managers/stylist/index';
+import ManagerChargeOf from './managers/charge_of/index';
+import ManagerMakeup_hair from './managers/makeup_hair/index';
+import ManagerRole from './managers/role/index';
+import ManagerTime_location from './managers/time_location/index';
+import ManagerCalender from './managers/calender/index';
+import ManagerDevice from './managers/device/index';
+import ManagerSchedule from './managers/schedule/index';
 import Login_DB from './pages/login';
 import Not_logged from './pages_error/not_logged';
 import Not_found from './pages_error/not_found';
@@ -46,16 +47,16 @@ class index extends Component {
     onClickPage = (value) => {
         this.props.history.push(`/dashboard/${value.key}`)
     }
-    handleLogin_DB = () => {
+    handle_Login_DB = () => {
         this.setState({ logged_in_db: true });
     }
-    handleLogout_DB = () => {
+    handle_Logout_DB = () => {
         this.setState({ logged_in_db: false });
     }
-    openDrawerForm = () => {
+    open_DrawerForm = () => {
         this.setState({ is_form_drawer: true })
     }
-    closeDrawerForm = () => {
+    close_DrawerForm = () => {
         this.setState({ is_form_drawer: false })
     }
     render() {
@@ -63,6 +64,7 @@ class index extends Component {
             {
                 key: 'manager', icon: <DatabaseOutlined />, label: 'Manager', children: [
                     { key: '', icon: <AiOutlineContainer />, label: 'Calender' },
+                    { key: 'schedule', icon: <AiFillBook />, label: 'Schedule' },
                     { key: 'time_location', icon: <AiOutlineFieldTime />, label: 'Time location' },
                     { key: 'stylist', icon: <AiTwotoneSkin />, label: 'Stylist' },
                     { key: 'makeup_hair', icon: <AiFillGitlab />, label: 'Makeup hair' },
@@ -80,7 +82,6 @@ class index extends Component {
 
             <>
                 {logged_in_db == true ?
-
                     <Layout hasSider style={{ minHeight: '100vh', }} >
                         <Layout.Sider className='overflow-y-auto h-screen md:block hidden'
                             collapsible collapsed={this.state.collapsed} breakpoint="lg"
@@ -89,7 +90,7 @@ class index extends Component {
                                 onClick={(value) => this.onClickPage(value)} />
                         </Layout.Sider>
                         <Drawer title="Menu" placement={'left'} width={250} className='md:hidden block'
-                            onClose={() => this.closeDrawerForm()}
+                            onClose={() => this.close_DrawerForm()}
                             open={this.state.is_form_drawer}>
                             <Menu className='border p-[5px] shadow-sm rounded-[5px]'
                                 theme="light" mode="inline" items={items} defaultSelectedKeys={['manager']}
@@ -97,11 +98,12 @@ class index extends Component {
                         </Drawer>
                         <Layout className='overflow-auto h-screen'>
                             <Layout.Header className='sticky top-0 z-50 border-b shadow-sm bg-white'>
-                                <HeaderDB openDrawerForm={this.openDrawerForm} handleLogout_DB={this.handleLogout_DB} />
+                                <HeaderDB open_DrawerForm={this.open_DrawerForm} handle_Logout_DB={this.handle_Logout_DB} />
                             </Layout.Header>
                             <Layout.Content className='py-[10px]'>
                                 <Switch>
                                     <Route exact path={`${url}`}><ManagerCalender /></Route>
+                                    <Route exact path={`${url}schedule`}><ManagerSchedule /></Route>
                                     <Route exact path={`${url}user`}><ManagerUser /></Route>
                                     <Route exact path={`${url}brand`}><ManagerBrand /></Route>
                                     <Route exact path={`${url}stylist`}><ManagerStylist /></Route>
@@ -121,7 +123,7 @@ class index extends Component {
                         <Switch>
                             <Route exact path={`${url}`}><Not_logged /></Route>
                             <Route exact path={`${url}login`}>
-                                <Login_DB handleLogin_DB={this.handleLogin_DB} />
+                                <Login_DB handle_Login_DB={this.handle_Login_DB} />
                             </Route>
                             <Route ><Not_found /></Route>
                         </Switch>
