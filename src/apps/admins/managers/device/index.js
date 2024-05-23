@@ -34,7 +34,7 @@ class index extends Component {
                 render: (user_id) =>
                     <div className='flex items-center justify-center'>
                         <Image className='object-cover rounded-[5px]' width={80} height={80}
-                            src={(user_id?.avatar == "" || user_id?.avatar == null) ? require(`@assets/images/avatar_none.jpg`).default : user_id?.avatar} />
+                            src={user_id.avatar} />
                     </div>
                 ,
             },

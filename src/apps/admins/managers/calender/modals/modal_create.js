@@ -13,9 +13,7 @@ import { create_schedule } from '@services/schedule_services';
 import { image_to_base64 } from '@utils/base64';
 import FormInput from '@components/inputs/form_input';
 import FormTextare from '@components/inputs/form_textare';
-import ModalFooter from '@components/modal/modal_footer';
 import dayjs from 'dayjs';
-
 class modal_create extends Component {
     constructor(props) {
         super(props);
@@ -233,21 +231,17 @@ class modal_create extends Component {
         let is_loading = this.state.is_loading;
         return (
             <Modal title={`CREATE A SCHEDULE FOR DATE: ${this.props.date_select}`} open={this.props.modal_create}
-                onCancel={() => this.props.open_modal("create", false)} width={500}
-                maskClosable={!is_loading}
-                footer={[
-                    <ModalFooter open_modal={this.props.open_modal} type={'create'}
-                        is_loading={is_loading} handle_funtion={this.handle_create_schedule} />
-                ]}>
+                okText={"CONFIRM"} okType={"default"} cancelText={"CANCEL"}
+                onOk={() => this.handle_create_schedule()}
+                onCancel={() => this.props.open_modal("create", false)} width={400}>
                 <Spin spinning={is_loading}>
                     <Space direction='vertical'>
                         <div className='border px-[10px] pb-[10px] shadow-sm rounded-[5px] space-y-[5px]'>
                             <Divider>ARTIST</Divider>
                             {data_schedule.user_id &&
                                 <div div className='flex items-center justify-center'>
-                                    <Image width={150} height={150}
-                                        className=' object-cover rounded-full'
-                                        src={(data_user?.avatar) ? data_user.avatar : require(`@assets/images/avatar_none.jpg`).default} />
+                                    <Image width={150} height={150} className=' object-cover rounded-full'
+                                        src={data_user.avatar} />
                                 </div>
                             }
                             <div className='space-y-[3px]'>
@@ -374,7 +368,6 @@ class modal_create extends Component {
                             <FormInput name={'Phone'} variable={'phone'} value={data_charge_of.phone}
                                 important={true}
                                 handle_onchange_input={this.props.on_change_charge_of} />
-
                         </div>
                         <div className='border px-[10px] pb-[10px] shadow-sm rounded-[5px] space-y-[5px]'>
                             <Divider>NOTE</Divider>
@@ -411,7 +404,6 @@ class modal_create extends Component {
                             <FormTextare name={'Show location'} variable={'show_localtion'} value={data_time_location.show_localtion}
                                 important={true}
                                 handle_onchange_input={this.props.on_change_time_location} />
-
                         </div>
                     </Space>
                 </Spin>
@@ -448,23 +440,18 @@ const mapDispatchToProps = dispatch => {
         get_list_user: () => dispatch(actions.get_list_user_redux()),
         get_user: (id) => dispatch(actions.get_user_redux(id)),
 
-        create_brand: (data) => dispatch(actions.create_brand_redux(data)),
         on_change_brand: (id, value) => dispatch(actions.on_change_brand_redux(id, value)),
         set_data_brand: (data) => dispatch(actions.set_data_brand_redux(data)),
 
-        create_charge_of: (data) => dispatch(actions.create_charge_of_redux(data)),
         on_change_charge_of: (id, value) => dispatch(actions.on_change_charge_of_redux(id, value)),
         set_data_charge_of: (data) => dispatch(actions.set_data_charge_of_redux(data)),
 
-        create_time_location: (data) => dispatch(actions.create_time_location_redux(data)),
         on_change_time_location: (id, value) => dispatch(actions.on_change_time_location_redux(id, value)),
         set_data_time_location: (data) => dispatch(actions.set_data_time_location_redux(data)),
 
-        create_stylist: (data) => dispatch(actions.create_stylist_redux(data)),
         on_change_stylist: (id, value) => dispatch(actions.on_change_stylist_redux(id, value)),
         set_data_stylist: (data) => dispatch(actions.set_data_stylist_redux(data)),
 
-        create_makeup_hair: (data) => dispatch(actions.create_makeup_hair_redux(data)),
         on_change_makeup_hair: (id, value) => dispatch(actions.on_change_makeup_hair_redux(id, value)),
         set_data_makeup_hair: (data) => dispatch(actions.set_data_makeup_hair_redux(data)),
 

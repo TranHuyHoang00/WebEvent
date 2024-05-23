@@ -58,8 +58,7 @@ class index extends Component {
             {
                 title: 'AVATAR', dataIndex: 'avatar', responsive: ['md'], width: 120,
                 render: (avatar) =>
-                    <Image className='object-cover rounded-[5px]' width={80} height={80}
-                        src={(avatar === "" || avatar === null) ? require(`@assets/images/avatar_none.jpg`).default : avatar} />
+                    <Image className='object-cover rounded-[5px]' width={80} height={80} src={avatar} />
                 ,
             },
             {

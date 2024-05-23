@@ -3,13 +3,12 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '@actions';
 import {
-    Calendar, Spin, Modal, Divider, Tag, Table, Space, Popconfirm, Button, Avatar, Image, Select, message,
-    Dropdown,
+    Calendar, Spin, Modal, Divider, Tag, Table, Space, Popconfirm, Button, Avatar, Image, Select, Dropdown,
 } from 'antd';
 import { AiFillEdit, AiFillEye, AiOutlinePlus } from "react-icons/ai";
-import Modal_detail from './modals/modal_detail';
-import Modal_create from './modals/modal_create';
-import Modal_edit from './modals/modal_edit';
+import ModalDetail from './modals/modal_detail';
+import ModalCreate from './modals/modal_create';
+import ModalEdit from './modals/modal_edit';
 import dayjs from 'dayjs';
 
 class index extends Component {
@@ -138,8 +137,7 @@ class index extends Component {
             {
                 title: 'AVATAR', dataIndex: 'user_id',
                 render: (user_id) =>
-                    <Image className='object-cover rounded-[5px]' width={50} height={50}
-                        src={(user_id.avatar == "" || user_id.avatar == null) ? require(`@assets/images/avatar_none.jpg`).default : user_id.avatar} />
+                    <Image className='object-cover rounded-[5px]' width={50} height={50} src={user_id.avatar} />
                 ,
             },
             {
@@ -201,21 +199,22 @@ class index extends Component {
                 </Spin>
 
                 {this.state.modal_create &&
-                    <Modal_create modal_create={this.state.modal_create} open_modal={this.open_modal}
-                        date_select={this.state.date_select} data_filter={this.state.data_filter} />
-                }
+                    <ModalCreate modal_create={this.state.modal_create} open_modal={this.open_modal}
+                        date_select={this.state.date_select} data_filter={this.state.data_filter} />}
                 {this.state.modal_detail &&
-                    <Modal_detail modal_detail={this.state.modal_detail} open_modal={this.open_modal}
-                        date_select={this.state.date_select} />
-                }
+                    <ModalDetail modal_detail={this.state.modal_detail} open_modal={this.open_modal} />}
                 {this.state.modal_edit &&
-                    <Modal_edit modal_edit={this.state.modal_edit} open_modal={this.open_modal}
-                        date_select={this.state.date_select} data_filter={this.state.data_filter} />
-                }
+                    <ModalEdit modal_edit={this.state.modal_edit} open_modal={this.open_modal} />}
 
                 <Modal title={`SCHEDULE FOR DATE: ${this.state.date_select}`} open={this.state.modal_data_schedule_dates}
-                    okText={"EXIT"} okType={"default"} cancelText={"CANCEL"}
-                    onOk={() => this.open_modal("modal_data_schedule_dates", false)}
+                    footer={[
+                        <>
+                            <Button onClick={() => this.open_modal("modal_data_schedule_dates", false)}
+                                className='bg-[#e94138] text-white'>
+                                Cancel
+                            </Button>
+                        </>
+                    ]}
                     onCancel={() => this.open_modal("modal_data_schedule_dates", false)}
                     width={800}>
                     <div className="m-[10px] p-[10px] border shadow-md bg-white">
@@ -258,10 +257,8 @@ const mapStateToProps = state => {
         data_schedule_dates: state.schedule.data_schedule_dates,
         data_schedule: state.schedule.data_schedule,
         is_loading: state.schedule.is_loading,
-        is_result: state.schedule.is_result,
 
         data_users: state.user.data_users,
-
     };
 };
 const mapDispatchToProps = dispatch => {
@@ -269,7 +266,6 @@ const mapDispatchToProps = dispatch => {
         get_list_schedule: (data) => dispatch(actions.get_list_schedule_redux(data)),
         get_schedule: (id) => dispatch(actions.get_schedule_redux(id)),
         delete_list_schedule: (id) => dispatch(actions.delete_list_schedule_redux(id)),
-        set_data_schedule: (id) => dispatch(actions.set_data_schedule_redux(id)),
 
         get_list_user: () => dispatch(actions.get_list_user_redux()),
 

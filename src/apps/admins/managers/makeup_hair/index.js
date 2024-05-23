@@ -58,10 +58,7 @@ class index extends Component {
                                 })}
                             </Carousel>
                             :
-                            <div className='flex items-center justify-center'>
-                                <Image width={80} height={80} className='object-cover rounded-[5px] '
-                                    src={require(`@assets/images/avatar_none.jpg`).default} />
-                            </div>
+                            <></>
                         }
 
                     </>

@@ -67,18 +67,18 @@ class login extends Component {
         return (
             <div className="h-screen w-screen font-sans bg-no-repeat bg-cover bg-center flex justify-center items-center" style={{ backgroundImage: `url(${bg})` }}>
                 <div className="leading-loose">
-                    <div className=" m-4 p-[20px] md:p-[40px] bg-gray-700 bg-opacity-60 rounded shadow-xl space-y-[15px] w-[350px] sm:w-[400px]">
+                    <div className=" m-4 p-[20px] md:p-[40px] bg-gray-600 rounded shadow-xl space-y-[15px] w-[350px] sm:w-[400px]">
                         <p className="text-white font-medium text-center text-[22px] ">ADMIN</p>
                         <div className="space-y-[5px]">
                             <label className="block  text-sm text-white" for="email">Username</label>
                             <input onChange={(event) => this.onchange_username(event)}
-                                className="w-full px-5 py-1 text-gray-700 bg-gray-100 rounded focus:outline-none focus:bg-white"
+                                className="w-full px-[10px] py-1 text-gray-700 bg-gray-100 rounded focus:outline-none focus:bg-white"
                                 type="text" id="username" aria-label="username" required />
                         </div>
                         <div className="space-y-[5px]">
                             <label className="block text-sm text-white">Password</label>
                             <div className='relative'>
-                                <input className="w-full px-5 py-1 text-gray-700 bg-gray-100 rounded focus:outline-none focus:bg-white"
+                                <input className="w-full px-[10px] py-1 text-gray-700 bg-gray-100 rounded focus:outline-none focus:bg-white"
                                     id="password" arial-label="password" required
                                     type={this.state.is_show_password === false ? 'password' : 'text'} onChange={(event) => this.onchange_password(event)} />
                                 <div onClick={() => this.handle_show_password()}

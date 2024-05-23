@@ -22,7 +22,7 @@ class modal_detail extends Component {
                     <>
                         <Button onClick={() => this.props.open_modal("detail", false)}
                             className='bg-[#e94138] text-white'>
-                            Hủy bỏ
+                            Cancel
                         </Button>
                     </>
                 ]}>
@@ -49,10 +49,7 @@ class modal_detail extends Component {
                                 </div>
                             </div>
                             :
-                            <div className='flex items-center justify-center'>
-                                <Image width={200} height={200} className='object-cover rounded-[5px] '
-                                    src={require(`@assets/images/avatar_none.jpg`).default} />
-                            </div>
+                            <></>
                         }
                         {text_line_1_3('Name', data_stylist.name)}
 

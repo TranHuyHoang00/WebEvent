@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
-import { Image, Carousel, Modal, Collapse, Space, Input } from 'antd';
 import { connect } from 'react-redux';
+import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from "react-icons/ai";
+import { Image, Carousel, Modal, Collapse, Space, Input, Button } from 'antd';
 class modal_detail extends Component {
     constructor(props) {
         super(props);
@@ -15,24 +15,27 @@ class modal_detail extends Component {
         let data_schedule = this.props.data_schedule;
         return (
             <>
-                <Modal title={`DETAIL A SCHEDULE FOR DATE: ${this.props.date_select == undefined ? (data_schedule.time_localtion_id && data_schedule.time_localtion_id.show_date) : this.props.date_select}`} open={this.props.modal_detail}
-                    okText={"EXIT"} okType={"default"} cancelText={"CANCEL"}
-                    onOk={() => this.props.open_modal("detail", false)}
+                <Modal title="DETAIL SCHEDULE" open={this.props.modal_detail}
+                    footer={[
+                        <>
+                            <Button onClick={() => this.props.open_modal("detail", false)}
+                                className='bg-[#e94138] text-white'>
+                                Cancel
+                            </Button>
+                        </>
+                    ]}
                     onCancel={() => this.props.open_modal("detail", false)}
                     width={400}>
                     <Collapse defaultActiveKey={['1']} size="small">
                         <Collapse.Panel header="ARTIST" key="1" >
                             <div className='space-y-[10px]'>
                                 <div className='flex items-center justify-center'>
-                                    <Image width={150} height={150}
-                                        className=' object-cover rounded-[5px]'
-                                        src={(data_schedule.user_id && (data_schedule.user_id.avatar == "" || data_schedule.user_id.avatar == null)) ?
-                                            require(`@assets/images/avatar_none.jpg`).default : data_schedule.user_id && data_schedule.user_id.avatar} />
+                                    <Image width={150} height={150} className=' object-cover rounded-[5px]'
+                                        src={data_schedule?.user_id?.avatar} />
                                 </div>
                                 <Space >
                                     <label>Name :</label>
-                                    <Input className='font-[600] italic'
-                                        value={data_schedule?.user_id?.fullname} />
+                                    <Input className='font-[600] italic' value={data_schedule?.user_id?.fullname} />
                                 </Space>
                             </div>
                         </Collapse.Panel>
@@ -40,38 +43,37 @@ class modal_detail extends Component {
                             <div className='space-y-[10px]'>
                                 <Space >
                                     <label >Name :</label>
-                                    <Input className='font-[600] italic'
-                                        value={data_schedule?.brand_id?.name} />
+                                    <Input className='font-[600] italic' value={data_schedule?.brand_id?.name} />
                                 </Space>
                             </div>
                         </Collapse.Panel>
                         <Collapse.Panel header="STYLIST" key="3">
                             <div className='space-y-[10px]'>
-                                {data_schedule.stylist_id && data_schedule.stylist_id.images && data_schedule.stylist_id.images.length !== 0 ?
-                                    <div className='space-y-[5px]'>
-                                        <div className='flex items-center justify-center'>
-                                            <button ><AiOutlineDoubleLeft /></button>
-                                            <div className='h-[150px] w-[150px] '>
-                                                <Carousel arrows autoplay >
-                                                    {data_schedule.stylist_id && data_schedule.stylist_id.images.map((item, index) => {
-                                                        return (
-                                                            <div key={item.id} className='flex items-center justify-center'>
-                                                                <Image width={150} height={150} className='object-cover rounded-[5px] '
-                                                                    src={item.value} />
-                                                            </div>
-                                                        )
-                                                    })}
-                                                </Carousel>
+                                <div>
+                                    <label >Image :</label>
+                                    {data_schedule.stylist_id && data_schedule.stylist_id.images && data_schedule.stylist_id.images.length !== 0 ?
+                                        <div className='space-y-[5px]'>
+                                            <div className='flex items-center justify-center'>
+                                                <button ><AiOutlineDoubleLeft /></button>
+                                                <div className='h-[150px] w-[150px] '>
+                                                    <Carousel arrows autoplay >
+                                                        {data_schedule.stylist_id && data_schedule.stylist_id.images && data_schedule.stylist_id.images.map((item, index) => {
+                                                            return (
+                                                                <div key={item.id} className='flex items-center justify-center'>
+                                                                    <Image width={150} height={150} className='object-cover rounded-[5px] '
+                                                                        src={item.value} />
+                                                                </div>
+                                                            )
+                                                        })}
+                                                    </Carousel>
+                                                </div>
+                                                <button ><AiOutlineDoubleRight /></button>
                                             </div>
-                                            <button ><AiOutlineDoubleRight /></button>
                                         </div>
-                                    </div>
-                                    :
-                                    <div className='flex items-center justify-center'>
-                                        <Image width={150} height={150} className='object-cover rounded-[5px] '
-                                            src={require(`@assets/images/avatar_none.jpg`).default} />
-                                    </div>
-                                }
+                                        :
+                                        <></>
+                                    }
+                                </div>
                                 <Space >
                                     <label >Name :</label>
                                     <Input className='font-[600] italic'
@@ -81,31 +83,31 @@ class modal_detail extends Component {
                         </Collapse.Panel>
                         <Collapse.Panel header="MAKEUP _ HAIR" key="4">
                             <div className='space-y-[10px]'>
-                                {data_schedule.makeup_hair_id && data_schedule.makeup_hair_id.images && data_schedule?.makeup_hair_id?.images?.length !== 0 ?
-                                    <div className='space-y-[5px]'>
-                                        <div className='flex items-center justify-center'>
-                                            <button ><AiOutlineDoubleLeft /></button>
-                                            <div className='h-[150px] w-[150px] '>
-                                                <Carousel arrows autoplay >
-                                                    {data_schedule.makeup_hair_id.images && data_schedule.makeup_hair_id.images.map((item, index) => {
-                                                        return (
-                                                            <div key={item.id} className='flex items-center justify-center'>
-                                                                <Image width={150} height={150} className='object-cover rounded-[5px] '
-                                                                    src={item.value} />
-                                                            </div>
-                                                        )
-                                                    })}
-                                                </Carousel>
+                                <div>
+                                    <label >Image :</label>
+                                    {data_schedule.makeup_hair_id && data_schedule.makeup_hair_id.images && data_schedule.makeup_hair_id.images.length !== 0 ?
+                                        <div className='space-y-[5px]'>
+                                            <div className='flex items-center justify-center'>
+                                                <button ><AiOutlineDoubleLeft /></button>
+                                                <div className='h-[150px] w-[150px] '>
+                                                    <Carousel arrows autoplay >
+                                                        {data_schedule.makeup_hair_id && data_schedule.makeup_hair_id.images && data_schedule.makeup_hair_id.images.map((item, index) => {
+                                                            return (
+                                                                <div key={item.id} className='flex items-center justify-center'>
+                                                                    <Image width={150} height={150} className='object-cover rounded-[5px] '
+                                                                        src={item.value} />
+                                                                </div>
+                                                            )
+                                                        })}
+                                                    </Carousel>
+                                                </div>
+                                                <button ><AiOutlineDoubleRight /></button>
                                             </div>
-                                            <button ><AiOutlineDoubleRight /></button>
                                         </div>
-                                    </div>
-                                    :
-                                    <div className='flex items-center justify-center'>
-                                        <Image width={150} height={150} className='object-cover rounded-[5px] '
-                                            src={require(`@assets/images/avatar_none.jpg`).default} />
-                                    </div>
-                                }
+                                        :
+                                        <></>
+                                    }
+                                </div>
                                 <Space >
                                     <label >Make up :</label>
                                     <Input className='font-[600] italic'

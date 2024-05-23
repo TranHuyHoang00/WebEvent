@@ -22,7 +22,7 @@ class modal_detail extends Component {
                     <>
                         <Button onClick={() => this.props.open_modal("detail", false)}
                             className='bg-[#e94138] text-white'>
-                            Hủy bỏ
+                            Cancel
                         </Button>
                     </>
                 ]}>

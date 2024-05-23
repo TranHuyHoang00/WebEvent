@@ -98,10 +98,9 @@ export const edit_stylist_redux = (id, data_stylist) => {
             let data = await edit_stylist(id, data_stylist);
             if (data && data.data && data.data.success === 1) {
                 dispatch(stylist_success());
-                message.success('Success');
             } else {
                 dispatch(stylist_faided());
-                message.error('Error');
+                message.error('Error when edit stylist');
             }
         } catch (error) {
             dispatch(stylist_faided());

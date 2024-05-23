@@ -98,10 +98,9 @@ export const edit_charge_of_redux = (id, data_charge_of) => {
             let data = await edit_charge_of(id, data_charge_of);
             if (data && data.data && data.data.success === 1) {
                 dispatch(charge_of_success());
-                message.success('Success');
             } else {
                 dispatch(charge_of_faided());
-                message.error('Error');
+                message.error('Error when edit person in charge');
             }
         } catch (error) {
             dispatch(charge_of_faided());

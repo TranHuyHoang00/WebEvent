@@ -4,7 +4,7 @@ import { DatabaseOutlined, } from '@ant-design/icons';
 import { Layout, Menu, Drawer } from 'antd';
 import {
     AiFillGitlab, AiOutlineUser, AiOutlineQq, AiTwotoneSkin, AiFillIdcard,
-    AiFillGold, AiOutlineFieldTime, AiFillUsb, AiOutlineContainer, AiFillBook
+    AiFillGold, AiOutlineFieldTime, AiFillUsb, AiOutlineContainer
 } from "react-icons/ai";
 import { withRouter } from 'react-router-dom';
 import { get_data_local } from '../../auths/local_storage';
@@ -13,15 +13,14 @@ import ManagerUser from './managers/user/index';
 import ManagerBrand from './managers/brand/index';
 import ManagerStylist from './managers/stylist/index';
 import ManagerChargeOf from './managers/charge_of/index';
-import ManagerMakeup_hair from './managers/makeup_hair/index';
+import ManagerMakeupHair from './managers/makeup_hair/index';
 import ManagerRole from './managers/role/index';
-import ManagerTime_location from './managers/time_location/index';
+import ManagerTimeLocation from './managers/time_location/index';
 import ManagerCalender from './managers/calender/index';
 import ManagerDevice from './managers/device/index';
-import ManagerSchedule from './managers/schedule/index';
-import Login_DB from './pages/login';
-import Not_logged from './pages_error/not_logged';
-import Not_found from './pages_error/not_found';
+import LoginDB from './pages/login';
+import NotLogged from './pages_error/not_logged';
+import NotFound from './pages_error/not_found';
 import Empty from './pages/empty';
 class index extends Component {
     constructor(props) {
@@ -64,7 +63,6 @@ class index extends Component {
             {
                 key: 'manager', icon: <DatabaseOutlined />, label: 'Manager', children: [
                     { key: '', icon: <AiOutlineContainer />, label: 'Calender' },
-                    { key: 'schedule', icon: <AiFillBook />, label: 'Schedule' },
                     { key: 'time_location', icon: <AiOutlineFieldTime />, label: 'Time location' },
                     { key: 'stylist', icon: <AiTwotoneSkin />, label: 'Stylist' },
                     { key: 'makeup_hair', icon: <AiFillGitlab />, label: 'Makeup hair' },
@@ -101,17 +99,16 @@ class index extends Component {
                             <Layout.Content className='py-[10px]'>
                                 <Switch>
                                     <Route exact path={`${url}`}><ManagerCalender /></Route>
-                                    <Route exact path={`${url}schedule`}><ManagerSchedule /></Route>
                                     <Route exact path={`${url}user`}><ManagerUser /></Route>
                                     <Route exact path={`${url}brand`}><ManagerBrand /></Route>
                                     <Route exact path={`${url}stylist`}><ManagerStylist /></Route>
                                     <Route exact path={`${url}charge_of`}><ManagerChargeOf /></Route>
-                                    <Route exact path={`${url}makeup_hair`}><ManagerMakeup_hair /></Route>
+                                    <Route exact path={`${url}makeup_hair`}><ManagerMakeupHair /></Route>
                                     <Route exact path={`${url}role`}><ManagerRole /></Route>
-                                    <Route exact path={`${url}time_location`}><ManagerTime_location /></Route>
+                                    <Route exact path={`${url}time_location`}><ManagerTimeLocation /></Route>
                                     <Route exact path={`${url}device`}><ManagerDevice /></Route>
                                     <Route exact path={`${url}login`}><Empty /></Route>
-                                    <Route ><Not_found /></Route>
+                                    <Route ><NotFound /></Route>
                                 </Switch>
                             </Layout.Content>
                         </Layout>
@@ -119,11 +116,11 @@ class index extends Component {
                     :
                     <>
                         <Switch>
-                            <Route exact path={`${url}`}><Not_logged /></Route>
+                            <Route exact path={`${url}`}><NotLogged /></Route>
                             <Route exact path={`${url}login`}>
-                                <Login_DB handle_login_db={this.handle_login_db} />
+                                <LoginDB handle_login_db={this.handle_login_db} />
                             </Route>
-                            <Route ><Not_found /></Route>
+                            <Route ><NotFound /></Route>
                         </Switch>
                     </>
                 }

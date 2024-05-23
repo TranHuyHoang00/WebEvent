@@ -98,10 +98,9 @@ export const edit_makeup_hair_redux = (id, data_makeup_hair) => {
             let data = await edit_makeup_hair(id, data_makeup_hair);
             if (data && data.data && data.data.success === 1) {
                 dispatch(makeup_hair_success());
-                message.success('Success');
             } else {
                 dispatch(makeup_hair_faided());
-                message.error('Error');
+                message.error('Error when edit makeup_hair');
             }
         } catch (error) {
             dispatch(makeup_hair_faided());

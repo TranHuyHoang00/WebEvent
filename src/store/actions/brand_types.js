@@ -98,10 +98,9 @@ export const edit_brand_redux = (id, data_brand) => {
             let data = await edit_brand(id, data_brand);
             if (data && data.data && data.data.success === 1) {
                 dispatch(brand_success());
-                message.success('Success');
             } else {
                 dispatch(brand_faided());
-                message.error('Error');
+                message.error('Error when edit brand');
             }
         } catch (error) {
             dispatch(brand_faided());

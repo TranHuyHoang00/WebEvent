@@ -98,10 +98,9 @@ export const edit_time_location_redux = (id, data_time_location) => {
             let data = await edit_time_location(id, data_time_location);
             if (data && data.data && data.data.success === 1) {
                 dispatch(time_location_success());
-                message.success('Success');
             } else {
                 dispatch(time_location_faided());
-                message.error('Error');
+                message.error('Error when edit time_location');
             }
         } catch (error) {
             dispatch(time_location_faided());
