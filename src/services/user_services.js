@@ -1,4 +1,4 @@
-import api_admin from '../auths/api_admin';
+import api_admin from '@auths//api_admin';
 const get_list_user = () => {
     return api_admin.get(`/auth/api/v1/list-user`,);
 }

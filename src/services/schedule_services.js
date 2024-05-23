@@ -1,5 +1,4 @@
-import { data } from 'autoprefixer';
-import api_admin from '../auths/api_admin';
+import api_admin from '@auths//api_admin';
 const get_list_schedule = (data) => {
     return api_admin.post(`/management/api/v1/list-schedule`, data);
 }

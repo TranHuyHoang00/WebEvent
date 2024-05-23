@@ -1,4 +1,4 @@
-import api_admin from '../auths/api_admin';
+import api_admin from '@auths//api_admin';
 const get_list_stylist = () => {
     return api_admin.get(`/management/api/v1/list-stylist`,);
 }

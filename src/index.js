@@ -6,21 +6,17 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, } from "react-router-dom";
 import { Provider } from 'react-redux';
 import reduxStore from './store/redux';
-import 'primereact/resources/primereact.css';
-import 'primereact/resources/themes/saga-blue/theme.css';
-import 'primeicons/primeicons.css';
+import { ConfigProvider } from 'antd';
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={reduxStore}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
+    <ConfigProvider>
+      <Provider store={reduxStore}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
+    </ConfigProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

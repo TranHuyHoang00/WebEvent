@@ -1,4 +1,4 @@
-import api_admin from '../auths/api_admin';
+import api_admin from '@auths//api_admin';
 const get_list_charge_of = () => {
     return api_admin.get(`/management/api/v1/list-charge_of`,);
 }
